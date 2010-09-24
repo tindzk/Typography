@@ -1,0 +1,80 @@
+body {
+	font-family: Palatino, serif;
+	font-size: 16px;
+	line-height: 24px;
+	background: #f5f5ff;
+}
+
+h1 {
+    color: #004B6B;
+}
+
+a {
+    color: #004B6B;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #6D4100;
+    text-decoration: underline;
+}
+
+a:visited {
+	color: #261a3b;
+}
+
+p {
+	margin: 0 0 15px 0;
+}
+
+.path {
+	font-style: italic;
+	font-size: 16px;
+	color: #219161;
+}
+
+.number {
+	color: #219161;
+}
+
+.macro, .function {
+	color: #0000FF;
+	font-size: 12px;
+	line-height: 18px;
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
+}
+
+.variable {
+	color: #19469D;
+	font-size: 12px;
+	line-height: 18px;
+	font-family: Monaco, Consolas, "Lucida Console", monospace;
+}
+
+.keyword, .term {
+	background: #f8f8ff;
+	border: 1px solid #dedede;
+	font-size: 14px;
+	padding: 0 0.2em;
+}
+
+.warning, .note {
+	color: #000000;
+	padding: .05em .5em;
+	margin: .5em;
+	font-size: 14px;
+	width: 75%;
+	margin: 5px auto 5px auto;
+}
+
+.warning {
+	background-color: #ffe0e0;
+	border: 1px solid #cc6666;
+	border-left: 10px solid #cc6666;
+}
+
+.note {
+	background-color: #ddffdd;
+	border: 1px solid #99cc99;
+	border-left: 10px solid #99cc99;
+}
