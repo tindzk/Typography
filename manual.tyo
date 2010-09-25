@@ -1,0 +1,268 @@
+.meta {
+	.title{docsgen}
+}
+
+.chapter[Introduction] {
+	.p {
+		.i{docsgen} is a frontend for the .url[Typography] {
+			http://github.com/tindzk/Jivai/blob/master/src/Typography.c
+		} markup.
+	}
+
+	.p {
+		Its purpose is to create well-formatted documents without much
+		effort. Therefore, docsgen offers various features which
+		facilitate styling and structuring texts.
+	}
+}
+
+.chapter[Installation] {
+	.section[Requirements] {
+		For tplgen to compile, make sure to have these prerequisites
+		installed:
+
+		.list {
+			.item{Jivai}
+			.item{Jivai-Utils}
+			.item{tplgen}
+		}
+	}
+
+	.section[Checkout] {
+		.command {
+			git clone git://github.com/docsgen/docsgen.git
+		}
+	}
+
+	.section[Compile] {
+		.command {
+			cd docsgen; ./build.sh
+		}
+	}
+}
+
+.chapter[Usage] {
+	docsgen requires at least one parameter which is the path to the
+	document. To generate this manual, run:
+
+	.command {
+		./docsgen.bin manual.tyo
+	}
+
+	Additionally, you can specify a second parameter for the base
+	path in which the CSS file (.path{style.css}) and the
+	.url[syntax highlighter]{
+		http://alexgorbatchev.com/SyntaxHighlighter/
+	} are stored.
+}
+
+.chapter[Commands] {
+	.p {
+		A document written in Typography is basically a sequence of
+		(nested) commands surrounded by text. Commands are
+		comparable to functions in programming languages. Hence,
+		some commands may even accept options.
+	}
+
+	.p {
+		A typical command is used like this: .keyword{.cmd\{value\}}.
+		Parameters are generally optional. They can be specified
+		using square brackets: .keyword{.cmd\[param\]\{value\}}.
+	}
+
+	.section[Meta] {
+		.anchor{meta}
+		.keyword{meta} is a top-level command, i.e. it cannot be
+		used within other blocks.
+
+		It allows to specify the document's title:
+
+		.code {
+			.meta \{
+				.title\{Document Title\}
+			\}
+		}
+	}
+
+	.section[Chapters and Sections] {
+		Like .jump{meta}, .keyword{chapter} is another top-level
+		command.
+
+		Chapter are automatically added to the table of contents.
+		Sometimes it's desired to subdivide the contents of a
+		chapter. Therefore, chapters may also contain sections
+		(.keyword{.section\{...\}}). However, the generated table of
+		contents won't cover any links to sections.
+	}
+
+	.section[Style] {
+		The following styles are supported:
+		.list {
+			.item{b (.b{bold})}
+			.item{i (.i{italic})}
+			.item{class (.class{ClassName})}
+			.item{func (.func{main})}
+			.item{var (.var{var})}
+			.item{macro (.macro{macro})}
+			.item{term (.term{1 + 2})}
+			.item{keyword (.keyword{docsgen})}
+			.item{path (.path{/root})}
+			.item{number (.number{8080})}
+		}
+
+		Styles only format the given text, i.e. they don't require any
+		options.
+	}
+
+	.section[Blocks] {
+		docsgen supports .keyword{blocks}. Their purpose is to
+		inline texts. Notes (.keyword{note}) and warnings
+		(.keyword{warning}) are supported:
+
+		.note {
+			Note block
+		}
+
+		.warning {
+			Warning block
+		}
+	}
+
+	.section[Lists] {
+		A list is initialized using the .keyword{list} command.
+		Within a list, there cannot be other elements than
+		.keyword{item}s:
+
+		.code {
+			.list \{
+				.item\{Item 1\}
+				.item\{Item 2\}
+			\}
+		}
+	}
+
+	.section[Paragraphs] {
+		docsgen does not detect paragraphs automatically. To force a
+		paragraph, the corresponding text needs to be surrounded by
+		a .keyword{p} command.
+	}
+
+	.section[Syntax highlighting] {
+		docsgen supports highlighting of code and shell commands:
+
+		.list {
+			.item{command: Shell command(s)}
+			.item{code: C, C++ code}
+		}
+
+		For example, this
+
+		.code {
+			.command \{
+				ls -lah
+			\}
+
+			.code \{
+				int main(void) \{
+					return EXIT_SUCCESS;
+				\}
+			\}
+		}
+
+		will render to:
+
+		.command {
+			ls -lah
+		}
+
+		.code {
+			int main(void) \{
+				return EXIT_SUCCESS;
+			\}
+		}
+	}
+
+	.section[Anchors] {
+		Anchors are invisible markers which can be set throughout
+		the whole document and jumped to.
+
+		An anchor needs to be initialized using the .keyword{anchor}
+		command.
+
+		.anchor{jump}
+		A link pointing to an anchor can be generated using
+		.keyword{jump}, whereas its value, the anchor name, will be taken
+		as caption if no option is set.
+	}
+
+	.section[Links] {
+		The following types of links are supported:
+
+		.list {
+			.item{.i{mail}: E-mail address (.mail{user@example.com})}
+			.item{.i{url}: URL (.url{http://www.example.com/})}
+		}
+
+		The usage of a link is similar to an .jump[anchor jumpers']{jump}:
+		.code {
+			.url\[Google\]\{http://www.google.com/\}
+			.url\[John Smith\]\{john@example.com\}
+		}
+	}
+}
+
+.chapter[Example] {
+	A sample document may look like:
+
+	.code {
+		.meta \{
+			.title\{Sample Document\}
+		\}
+
+		.chapter\{First Chapter\} \{
+			...
+		\}
+
+		.chapter\{Second Chapter\} \{
+			.section\{Section\} \{
+				...
+			\}
+		\}
+	}
+}
+
+.chapter[License] {
+	.p {
+		Licensed under the EUPL, Version 1.1 only (the
+		.i{"Licence"}); You may not use this work except in
+		compliance with the Licence.
+	}
+
+	.p {
+		You may obtain a copy of the Licence at:
+			.url{http://ec.europa.eu/idabc/eupl}
+	}
+
+	.p {
+		Unless required by applicable law or agreed to in writing,
+		software distributed under the Licence is distributed on an
+		"AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+		either express or implied.
+	}
+
+	.p {
+		See the Licence for the specific language governing
+		permissions and limitations under the Licence.
+	}
+}
+
+.chapter[See also] {
+	.list {
+		.item{.url[Browse source]{http://github.com/tindzk/docsgen}}
+		.item{.url[GitHub account]{http://github.com/tindzk}}
+	}
+}
+
+.chapter[Contact] {
+	.mail[Tim Nieradzik]{tim.nieradzik@gmx.de}
+}
