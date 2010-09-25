@@ -37,7 +37,7 @@ p {
 	color: #219161;
 }
 
-.macro, .function {
+.class, .macro, .function {
 	color: #0000FF;
 	font-size: 12px;
 	line-height: 18px;
