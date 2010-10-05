@@ -193,6 +193,11 @@ static def(void, ParseUrl, Typography_Node *child, Body *body) {
 	Body_AddUrl(body, caption, url);
 }
 
+static def(void, ParseImage, Typography_Node *child, Body *body) {
+	String path = String_Trim(ref(GetValue)(child));
+	Body_AddImage(body, path);
+}
+
 static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 	String name;
 	Body_BlockType block;
@@ -228,6 +233,8 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 		ref(ParseJump)(this, child, body);
 	} else if (String_Equals(name, $("url"))) {
 		ref(ParseUrl)(this, child, body);
+	} else if (String_Equals(name, $("image"))) {
+		ref(ParseImage)(this, child, body);
 	} else {
 		Logger_LogFmt(&logger, Logger_Level_Error,
 			$("line %: '%' not understood."),

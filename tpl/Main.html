@@ -43,6 +43,8 @@
 		<a href="#{$body.u.jump.anchor}">{$body.u.jump.caption}</a>
 	{else $body.type == Body_ItemType_Url}
 		<a href="{$body.u.url.url}">{$body.u.url.caption}</a>
+	{else $body.type == Body_ItemType_Image}
+		<img src="{$body.u.image.path}" />
 	{end}
 [end]
 

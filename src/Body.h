@@ -32,6 +32,7 @@ typedef enum {
 
 typedef enum {
 	ref(ItemType_Text),
+	ref(ItemType_Image),
 	ref(ItemType_Command),
 	ref(ItemType_Code),
 	ref(ItemType_Mail),
@@ -51,6 +52,10 @@ typedef struct {
 	String value;
 	int style;
 } ref(Text);
+
+typedef struct {
+	String path;
+} ref(Image);
 
 typedef struct {
 	String value;
@@ -85,6 +90,7 @@ typedef struct {
 	union {
 		ref(Url)     url;
 		ref(Text)    text;
+		ref(Image)   image;
 		ref(Code)    code;
 		ref(Mail)    mail;
 		ref(Anchor)  anchor;
@@ -123,6 +129,7 @@ overload def(void, AddText, String text);
 def(void, AddCommand, String value);
 def(void, AddCode, String value);
 def(void, AddMail, String caption, String addr);
+def(void, AddImage, String path);
 def(void, AddAnchor, String name);
 def(void, AddJump, String caption, String anchor);
 def(void, AddUrl, String caption, String url);

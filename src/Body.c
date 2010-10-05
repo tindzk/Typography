@@ -124,6 +124,16 @@ def(void, AddMail, String caption, String addr) {
 	ref(Push)(this, item);
 }
 
+def(void, AddImage, String path) {
+	ref(Item) item;
+
+	item.type = ref(ItemType_Image);
+
+	item.u.image.path = String_Clone(path);
+
+	ref(Push)(this, item);
+}
+
 def(void, AddAnchor, String name) {
 	ref(Item) item;
 
