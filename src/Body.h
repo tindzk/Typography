@@ -31,27 +31,29 @@ typedef enum {
 } ref(BlockType);
 
 typedef enum {
-	ref(ItemType_Text),
-	ref(ItemType_Image),
-	ref(ItemType_Command),
-	ref(ItemType_Code),
-	ref(ItemType_Mail),
-	ref(ItemType_Anchor),
-	ref(ItemType_Jump),
-	ref(ItemType_Url)
-} ref(ItemType);
-
-typedef enum {
-	ref(EntryType_Items),
+	ref(EntryType_Collection),
 	ref(EntryType_Block),
 	ref(EntryType_Paragraph),
 	ref(EntryType_List),
+	ref(EntryType_ListItem),
+	ref(EntryType_Url),
+	ref(EntryType_Text),
+	ref(EntryType_Image),
+	ref(EntryType_Command),
+	ref(EntryType_Code),
+	ref(EntryType_Mail),
+	ref(EntryType_Anchor),
+	ref(EntryType_Jump)
 } ref(EntryType);
 
 typedef struct {
 	String value;
 	int style;
 } ref(Text);
+
+typedef struct {
+	ref(BlockType) type;
+} ref(Block);
 
 typedef struct {
 	String path;
@@ -66,7 +68,6 @@ typedef struct {
 } ref(Code);
 
 typedef struct {
-	String caption;
 	String addr;
 } ref(Mail);
 
@@ -75,61 +76,50 @@ typedef struct {
 } ref(Anchor);
 
 typedef struct {
-	String caption;
 	String anchor;
 } ref(Jump);
 
 typedef struct {
-	String caption;
 	String url;
 } ref(Url);
 
-typedef struct {
-	ref(ItemType) type;
+typedef struct ref(Entry) {
+	ref(EntryType) type;
 
 	union {
 		ref(Url)     url;
-		ref(Text)    text;
-		ref(Image)   image;
 		ref(Code)    code;
 		ref(Mail)    mail;
-		ref(Anchor)  anchor;
+		ref(Text)    text;
 		ref(Jump)    jump;
-		ref(Command) cmd;
+		ref(Image)   image;
+		ref(Block)   block;
+		ref(Anchor)  anchor;
+		ref(Command) command;
 	} u;
-} ref(Item);
 
-typedef struct {
-	Array(ref(Item), *items);
-} ref(ListItem);
-
-typedef struct {
-	ref(EntryType) type;
-
-	Array(ref(Item), *items);
-
-	union {
-		ref(BlockType)       block;
-		Array(ref(ListItem), *list);
-	} u;
+	Array(struct ref(Entry) *, *entries);
+	struct ref(Entry) *parent;
 } ref(Entry);
 
 typedef struct {
-	Array(ref(Entry), *items);
+	ref(Entry) root;
+	ref(Entry) *curEntry;
 } self;
 
 def(void, Init);
-def(void, EnterBlock, ref(BlockType) type);
-def(void, EnterParagraph);
-def(void, EnterList);
-def(void, EnterListItem);
+def(void, Enter);
 def(void, Return);
-overload def(void, AddText, String text, int style);
-overload def(void, AddText, String text);
-def(void, AddCommand, String value);
-def(void, AddCode, String value);
-def(void, AddMail, String caption, String addr);
-def(void, AddImage, String path);
-def(void, AddAnchor, String name);
-def(void, AddJump, String caption, String anchor);
-def(void, AddUrl, String caption, String url);
+def(void, SetBlock, ref(BlockType) type);
+def(void, SetParagraph);
+def(void, SetUrl, String url);
+def(void, SetList);
+def(void, SetListItem);
+overload def(void, SetText, String text, int style);
+overload def(void, SetText, String text);
+def(void, SetCommand, String value);
+def(void, SetCode, String value);
+def(void, SetMail, String addr);
+def(void, SetImage, String path);
+def(void, SetAnchor, String name);
+def(void, SetJump, String anchor);

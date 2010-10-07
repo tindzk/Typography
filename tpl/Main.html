@@ -1,50 +1,34 @@
-[bodyEntry: Body_Entry $body]
-	{if $body.type == Body_EntryType_Paragraph}
-		<p>
-			{for $item in $body.items}
-				{block bodyItem $item}
-			{end}
-		</p>
-	{else $body.type == Body_EntryType_Block}
-		{if $body.u.block == Body_BlockType_Note}
+[bodyEntry: Body_Entry* $body]
+	{if $body->type == Body_EntryType_Paragraph}
+		<p>{for $entry in $body->entries}{block bodyEntry $entry}{end}</p>
+	{else $body->type == Body_EntryType_Block}
+		{if $body->u.block.type == Body_BlockType_Note}
 			<p class="note">
 		{else}
 			<p class="warning">
 		{end}
-			{for $block in $body.items}
-				{block bodyItem $block}
-			{end}
-		</p>
-	{else $body.type == Body_EntryType_List}
-		<ul>
-			{for $item in $body.u.list}
-				<li>{for $block in $item.items}{block bodyItem $block}{end}</li>
-			{end}
-		</ul>
-	{else $body.type == Body_EntryType_Items}
-		{for $item in $body.items}
-			{block bodyItem $item}
-		{end}
-	{end}
-[end]
 
-[bodyItem: Body_Item $body]
-	{if $body.type == Body_ItemType_Text}
-		{pass TemplateHelper_PrintStyled $body.u.text.style, $body.u.text.value}
-	{else $body.type == Body_ItemType_Command}
-		<script type="syntaxhighlighter" class="brush: shell"><!\[CDATA\[{$body.u.cmd.value}]]></script>
-	{else $body.type == Body_ItemType_Code}
-		<script type="syntaxhighlighter" class="brush: c"><!\[CDATA\[{$body.u.code.value}]]></script>
-	{else $body.type == Body_ItemType_Mail}
-		<a href="mailto:{$body.u.mail.addr}">{$body.u.mail.caption}</a>
-	{else $body.type == Body_ItemType_Anchor}
-		<a name="{$body.u.anchor.name}"></a>
-	{else $body.type == Body_ItemType_Jump}
-		<a href="#{$body.u.jump.anchor}">{$body.u.jump.caption}</a>
-	{else $body.type == Body_ItemType_Url}
-		<a href="{$body.u.url.url}">{$body.u.url.caption}</a>
-	{else $body.type == Body_ItemType_Image}
-		<img src="{$body.u.image.path}" />
+		{for $entry in $body->entries}{block bodyEntry $entry}{end}</p>
+	{else $body->type == Body_EntryType_List}
+		<ul>{for $entry in $body->entries}{block bodyEntry $entry}{end}</ul>
+	{else $body->type == Body_EntryType_ListItem}
+		<li>{for $entry in $body->entries}{block bodyEntry $entry}{end}</li>
+	{else $body->type == Body_EntryType_Url}
+		<a href="{$body->u.url.url}">{for $entry in $body->entries}{block bodyEntry $entry}{end}</a>
+	{else $body->type == Body_EntryType_Text}
+		{pass TemplateHelper_PrintStyled $body->u.text.style, $body->u.text.value}
+	{else $body->type == Body_EntryType_Command}
+		<script type="syntaxhighlighter" class="brush: shell"><!\[CDATA\[{$body->u.command.value}]]></script>
+	{else $body->type == Body_EntryType_Code}
+		<script type="syntaxhighlighter" class="brush: c"><!\[CDATA\[{$body->u.code.value}]]></script>
+	{else $body->type == Body_EntryType_Mail}
+		<a href="mailto:{$body->u.mail.addr}">{for $entry in $body->entries}{block bodyEntry $entry}{end}</a>
+	{else $body->type == Body_EntryType_Anchor}
+		<a name="{$body->u.anchor.name}"></a>
+	{else $body->type == Body_EntryType_Jump}
+		<a href="#{$body->u.jump.anchor}">{for $entry in $body->entries}{block bodyEntry $entry}{end}</a>
+	{else $body->type == Body_EntryType_Image}
+		<img src="{$body->u.image.path}" />
 	{end}
 [end]
 
@@ -81,14 +65,14 @@
 	{for $chapter in #doc->chapters}
 		<h2><a href="#{$chapter->title}" name="{$chapter->title}">{$chapter->title}</a></h2>
 
-		{for $body in $chapter->body.items}
+		{for $body in $chapter->body.root.entries}
 			{block bodyEntry $body}
 		{end}
 
 		{for $section in $chapter->sections}
 			<h3>{pass html $section->title}</h3>
 
-			{for $body in $section->body.items}
+			{for $body in $section->body.root.entries}
 				{block bodyEntry $body}
 			{end}
 		{end}

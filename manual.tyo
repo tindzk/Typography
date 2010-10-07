@@ -4,9 +4,9 @@
 
 .chapter[Introduction] {
 	.p {
-		.i{docsgen} is a frontend for the .url[Typography] {
-			http://github.com/tindzk/Jivai/blob/master/src/Typography.c
-		} markup.
+		.i{docsgen} is a frontend for the
+		.url[http://github.com/tindzk/Jivai/blob/master/src/Typography.c]{Typography}
+		markup.
 	}
 
 	.p {
@@ -51,9 +51,8 @@
 
 	Additionally, you can specify a second parameter for the base
 	path in which the CSS file (.path{style.css}) and the
-	.url[syntax highlighter]{
-		http://alexgorbatchev.com/SyntaxHighlighter/
-	} are stored.
+	.url[http://alexgorbatchev.com/SyntaxHighlighter/]{syntax
+	highlighter} are stored.
 }
 
 .chapter[Commands] {
@@ -191,22 +190,21 @@
 
 		.anchor{jump}
 		A link pointing to an anchor can be generated using
-		.keyword{jump}, whereas its value, the anchor name, will be taken
-		as caption if no option is set.
+		.keyword{jump}.
 	}
 
 	.section[Links] {
 		The following types of links are supported:
 
 		.list {
-			.item{.i{mail}: E-mail address (.mail{user@example.com})}
-			.item{.i{url}: URL (.url{http://www.example.com/})}
+			.item{.i{mail}: E-mail address (.mail[user@example.com]{user@example.com})}
+			.item{.i{url}: URL (.url[http://www.example.com/]{example.com})}
 		}
 
-		The usage of a link is similar to an .jump[anchor jumpers']{jump}:
+		The usage of a link is similar to an .jump[jump]{anchor jumpers'}:
 		.code {
-			.url\[Google\]\{http://www.google.com/\}
-			.url\[John Smith\]\{john@example.com\}
+			.url\[http://www.google.com/\]\{Google\}
+			.url\[john@example.com\]\{John Smith\}
 		}
 	}
 }
@@ -240,7 +238,10 @@
 
 	.p {
 		You may obtain a copy of the Licence at:
-			.url{http://ec.europa.eu/idabc/eupl}
+
+		.url[http://ec.europa.eu/idabc/eupl] {
+			http://ec.europa.eu/idabc/eupl
+		}
 	}
 
 	.p {
@@ -263,6 +264,14 @@
 	}
 }
 
+.chapter[Donate] {
+	.url[http://flattr.com/thing/69450/podfm-extensible-podcast-aggregator] {
+		.image {
+			http://api.flattr.com/button/button-compact-static-100x17.png
+		}
+	}
+}
+
 .chapter[Contact] {
-	.mail[Tim Nieradzik]{tim.nieradzik@gmx.de}
+	.mail[tim.nieradzik@gmx.de]{Tim Nieradzik}
 }
