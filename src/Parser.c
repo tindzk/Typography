@@ -27,7 +27,7 @@ static struct {
 };
 
 Body_Style ref(ResolveStyle)(String name) {
-	for (size_t i = 0; i < sizeof(styles) / sizeof(styles[0]); i++) {
+	for (size_t i = 0; i < nElems(styles); i++) {
 		if (String_Equals(name, styles[i].name)) {
 			return styles[i].style;
 		}
@@ -37,7 +37,7 @@ Body_Style ref(ResolveStyle)(String name) {
 }
 
 Body_BlockType ref(ResolveBlock)(String name) {
-	for (size_t i = 0; i < sizeof(blocks) / sizeof(blocks[0]); i++) {
+	for (size_t i = 0; i < nElems(blocks); i++) {
 		if (String_Equals(name, blocks[i].name)) {
 			return blocks[i].block;
 		}

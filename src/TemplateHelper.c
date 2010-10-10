@@ -20,7 +20,7 @@ static struct {
 String TemplateHelper_PrintStyled(int style, String s) {
 	String res = HeapString(s.len + 50);
 
-	for (size_t i = 0; i < sizeof(styles) / sizeof(styles[0]); i++) {
+	for (size_t i = 0; i < nElems(styles); i++) {
 		if (style & styles[i].style) {
 			String_Append(&res, $("<"));
 			String_Append(&res, styles[i].tag);
@@ -36,7 +36,7 @@ String TemplateHelper_PrintStyled(int style, String s) {
 
 	HTML_Entities_Encode(s, &res);
 
-	for (ssize_t i = sizeof(styles) / sizeof(styles[0]) - 1; i >= 0; i--) {
+	for (ssize_t i = nElems(styles) - 1; i >= 0; i--) {
 		if (style & styles[i].style) {
 			String_Append(&res, $("</"));
 			String_Append(&res, styles[i].tag);
