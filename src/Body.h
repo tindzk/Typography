@@ -30,22 +30,6 @@ typedef enum {
 	ref(BlockType_Warning)
 } ref(BlockType);
 
-typedef enum {
-	ref(EntryType_Collection),
-	ref(EntryType_Block),
-	ref(EntryType_Paragraph),
-	ref(EntryType_List),
-	ref(EntryType_ListItem),
-	ref(EntryType_Url),
-	ref(EntryType_Text),
-	ref(EntryType_Image),
-	ref(EntryType_Command),
-	ref(EntryType_Code),
-	ref(EntryType_Mail),
-	ref(EntryType_Anchor),
-	ref(EntryType_Jump)
-} ref(EntryType);
-
 typedef struct {
 	String value;
 	int style;
@@ -83,8 +67,24 @@ typedef struct {
 	String url;
 } ref(Url);
 
-typedef struct ref(Entry) {
-	ref(EntryType) type;
+typedef enum {
+	ref(Type_Collection),
+	ref(Type_Block),
+	ref(Type_Paragraph),
+	ref(Type_List),
+	ref(Type_ListItem),
+	ref(Type_Url),
+	ref(Type_Text),
+	ref(Type_Image),
+	ref(Type_Command),
+	ref(Type_Code),
+	ref(Type_Mail),
+	ref(Type_Anchor),
+	ref(Type_Jump)
+} ref(Type);
+
+typedef struct Body {
+	ref(Type) type;
 
 	union {
 		ref(Url)     url;
@@ -98,28 +98,6 @@ typedef struct ref(Entry) {
 		ref(Command) command;
 	} u;
 
-	Array(struct ref(Entry) *, *entries);
-	struct ref(Entry) *parent;
-} ref(Entry);
-
-typedef struct {
-	ref(Entry) root;
-	ref(Entry) *curEntry;
-} self;
-
-def(void, Init);
-def(void, Enter);
-def(void, Return);
-def(void, SetBlock, ref(BlockType) type);
-def(void, SetParagraph);
-def(void, SetUrl, String url);
-def(void, SetList);
-def(void, SetListItem);
-overload def(void, SetText, String text, int style);
-overload def(void, SetText, String text);
-def(void, SetCommand, String value);
-def(void, SetCode, String value);
-def(void, SetMail, String addr);
-def(void, SetImage, String path);
-def(void, SetAnchor, String name);
-def(void, SetJump, String anchor);
+	Array(struct Body *, *nodes);
+	struct Body *parent;
+} Body;

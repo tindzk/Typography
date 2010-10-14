@@ -1,4 +1,5 @@
 #import "Parser.h"
+#import <App.h>
 
 extern Logger logger;
 
@@ -47,7 +48,8 @@ Body_BlockType ref(ResolveBlock)(String name) {
 }
 
 def(void, Init) {
-	Document_Init(&this->document);
+	Array_Init(this->document.chapters, 0);
+	this->document.title = HeapString(0);
 }
 
 def(void, Destroy) {
@@ -58,7 +60,7 @@ def(Document *, GetDocument) {
 	return &this->document;
 }
 
-static String ref(GetValue)(Typography_Node *node) {
+static def(String, GetValue, Typography_Node *node) {
 	if (node->len == 0) {
 		Logger_LogFmt(&logger, Logger_Level_Error,
 			$("line %: value expected."),
@@ -94,7 +96,7 @@ static def(void, ParseMetaBlock, Typography_Node *node) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("title"))) {
-				Document_SetTitle(&this->document, ref(GetValue)(child));
+				String_Copy(&this->document.title, call(GetValue, child));
 			} else {
 				Logger_LogFmt(&logger, Logger_Level_Error,
 					$("line %: unknown meta tag '%'."),
@@ -105,11 +107,94 @@ static def(void, ParseMetaBlock, Typography_Node *node) {
 	}
 }
 
+static def(void, InitBody, Body *body) {
+	body->type   = Body_Type_Collection;
+	body->parent = NULL;
+	Array_Init(body->nodes, Body_DefaultLength);
+
+	this->cur.body = body;
+}
+
+static def(void, Enter) {
+	Body *body = New(Body);
+
+	body->type   = Body_Type_Collection;
+	body->parent = this->cur.body;
+	Array_Init(body->nodes, Body_DefaultLength);
+
+	Array_Push(this->cur.body->nodes, body);
+
+	this->cur.body =
+		this->cur.body->nodes->buf[this->cur.body->nodes->len - 1];
+}
+
+static def(void, Return) {
+	this->cur.body = this->cur.body->parent;
+}
+
+static def(void, SetBlock, Body_BlockType type) {
+	this->cur.body->type         = Body_Type_Block;
+	this->cur.body->u.block.type = type;
+}
+
+static def(void, SetParagraph) {
+	this->cur.body->type = Body_Type_Paragraph;
+}
+
+static def(void, SetUrl, String url) {
+	this->cur.body->type      = Body_Type_Url;
+	this->cur.body->u.url.url = String_Clone(url);
+}
+
+static def(void, SetList) {
+	this->cur.body->type = Body_Type_List;
+}
+
+static def(void, SetListItem) {
+	this->cur.body->type = Body_Type_ListItem;
+}
+
+static def(void, SetText, String text, int style) {
+	this->cur.body->type         = Body_Type_Text;
+	this->cur.body->u.text.value = String_Clone(text);
+	this->cur.body->u.text.style = style;
+}
+
+static def(void, SetCommand, String value) {
+	this->cur.body->type            = Body_Type_Command;
+	this->cur.body->u.command.value = String_Clone(value);
+}
+
+static def(void, SetCode, String value) {
+	this->cur.body->type         = Body_Type_Code;
+	this->cur.body->u.code.value = String_Clone(value);
+}
+
+static def(void, SetMail, String addr) {
+	this->cur.body->type        = Body_Type_Mail;
+	this->cur.body->u.mail.addr = String_Clone(addr);
+}
+
+static def(void, SetImage, String path) {
+	this->cur.body->type         = Body_Type_Image;
+	this->cur.body->u.image.path = String_Clone(path);
+}
+
+static def(void, SetAnchor, String name) {
+	this->cur.body->type          = Body_Type_Anchor;
+	this->cur.body->u.anchor.name = String_Clone(name);
+}
+
+static def(void, SetJump, String anchor) {
+	this->cur.body->type           = Body_Type_Jump;
+	this->cur.body->u.jump.anchor  = String_Clone(anchor);
+}
+
 static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body);
 
 static def(void, ParseList, Typography_Node *node, Body *body) {
-	Body_Enter(body);
-	Body_SetList(body);
+	call(Enter);
+	call(SetList);
 
 	for (size_t i = 0; i < node->len; i++) {
 		Typography_Node *child = node->nodes[i];
@@ -124,16 +209,16 @@ static def(void, ParseList, Typography_Node *node, Body *body) {
 				continue;
 			}
 
-			Body_Enter(body);
-			Body_SetListItem(body);
+			call(Enter);
+			call(SetListItem);
 
-			ref(ParseStyleBlock)(this, child, 0, body);
+			call(ParseStyleBlock, child, 0, body);
 
-			Body_Return(body);
+			call(Return);
 		}
 	}
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(String, CleanValue, String value) {
@@ -154,84 +239,88 @@ static def(String, CleanValue, String value) {
 }
 
 static def(void, ParseCommand, Typography_Node *child, Body *body) {
-	String value = ref(GetValue)(child);
+	String value = call(GetValue,   child);
+	String clean = call(CleanValue, value);
 
-	Body_Enter(body);
-	Body_SetCommand(body, ref(CleanValue)(this, value));
-	Body_Return(body);
+	call(Enter);
+	call(SetCommand, clean);
+	call(Return);
 }
 
 static def(void, ParseCode, Typography_Node *child, Body *body) {
-	String value = ref(GetValue)(child);
+	String value = call(GetValue,   child);
+	String clean = call(CleanValue, value);
 
-	Body_Enter(body);
-	Body_SetCode(body, ref(CleanValue)(this, value));
-	Body_Return(body);
+	call(Enter);
+	call(SetCode, clean);
+	call(Return);
 }
 
 static def(void, ParseMail, Typography_Node *child, Body *body) {
 	String addr = String_Trim(Typography_Item(child)->options);
 
-	Body_Enter(body);
-	Body_SetMail(body, addr);
+	call(Enter);
+	call(SetMail, addr);
 
-	ref(ParseStyleBlock)(this, child, 0, body);
+	call(ParseStyleBlock, child, 0, body);
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(void, ParseAnchor, Typography_Node *child, Body *body) {
-	Body_Enter(body);
-	Body_SetAnchor(body, String_Trim(ref(GetValue)(child)));
-	Body_Return(body);
+	String value = String_Trim(call(GetValue, child));
+
+	call(Enter);
+	call(SetAnchor, value);
+	call(Return);
 }
 
 static def(void, ParseJump, Typography_Node *child, Body *body) {
 	String anchor = String_Trim(Typography_Item(child)->options);
 
-	Body_Enter(body);
-	Body_SetJump(body, anchor);
+	call(Enter);
+	call(SetJump, anchor);
 
-	ref(ParseStyleBlock)(this, child, 0, body);
+	call(ParseStyleBlock, child, 0, body);
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(void, ParseUrl, Typography_Node *child, Body *body) {
 	String url = String_Trim(Typography_Item(child)->options);
 
-	Body_Enter(body);
-	Body_SetUrl(body, url);
+	call(Enter);
+	call(SetUrl, url);
 
-	ref(ParseStyleBlock)(this, child, 0, body);
+	call(ParseStyleBlock, child, 0, body);
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(void, ParseImage, Typography_Node *child, Body *body) {
-	String path = String_Trim(ref(GetValue)(child));
+	String path = String_Trim(call(GetValue, child));
 
-	Body_Enter(body);
-	Body_SetImage(body, path);
-	Body_Return(body);
+	call(Enter);
+	call(SetImage, path);
+	call(Return);
 }
 
 static def(void, ParseParagraph, Typography_Node *child, Body *body) {
-	Body_Enter(body);
-	Body_SetParagraph(body);
+	call(Enter);
+	call(SetParagraph);
 
-	ref(ParseStyleBlock)(this, child, 0, body);
+	call(ParseStyleBlock, child, 0, body);
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(void, ParseBlock, Body_BlockType type, Typography_Node *child, Body *body) {
-	Body_Enter(body);
-	Body_SetBlock(body, type);
+	call(Enter);
+	call(SetBlock, type);
 
-	ref(ParseStyleBlock)(this, child, 0, body);
+	call(ParseStyleBlock, child, 0, body);
 
-	Body_Return(body);
+	call(Return);
 }
 
 static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
@@ -242,27 +331,27 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 
 	if ((_style = ref(ResolveStyle)(name)) != Body_Styles_None) {
 		BitMask_Set(style, _style);
-		ref(ParseStyleBlock)(this, child, style, body);
+		call(ParseStyleBlock, child, style, body);
 	} else if ((type = ref(ResolveBlock)(name)) != Body_BlockType_None) {
-		ref(ParseBlock)(this, type, child, body);
+		call(ParseBlock, type, child, body);
 	} else if (String_Equals(name, $("list"))) {
-		ref(ParseList)(this, child, body);
+		call(ParseList, child, body);
 	} else if (String_Equals(name, $("p"))) {
-		ref(ParseParagraph)(this, child, body);
+		call(ParseParagraph, child, body);
 	} else if (String_Equals(name, $("url"))) {
-		ref(ParseUrl)(this, child, body);
+		call(ParseUrl, child, body);
 	} else if (String_Equals(name, $("command"))) {
-		ref(ParseCommand)(this, child, body);
+		call(ParseCommand, child, body);
 	} else if (String_Equals(name, $("code"))) {
-		ref(ParseCode)(this, child, body);
+		call(ParseCode, child, body);
 	} else if (String_Equals(name, $("mail"))) {
-		ref(ParseMail)(this, child, body);
+		call(ParseMail, child, body);
 	} else if (String_Equals(name, $("anchor"))) {
-		ref(ParseAnchor)(this, child, body);
+		call(ParseAnchor, child, body);
 	} else if (String_Equals(name, $("jump"))) {
-		ref(ParseJump)(this, child, body);
+		call(ParseJump, child, body);
 	} else if (String_Equals(name, $("image"))) {
-		ref(ParseImage)(this, child, body);
+		call(ParseImage, child, body);
 	} else {
 		Logger_LogFmt(&logger, Logger_Level_Error,
 			$("line %: '%' not understood."),
@@ -273,9 +362,9 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 
 static def(void, AddText, String text, int style, Body *body) {
 	if (style != 0) {
-		Body_Enter(body);
-		Body_SetText(body, text, style);
-		Body_Return(body);
+		call(Enter);
+		call(SetText, text, style);
+		call(Return);
 
 		return;
 	}
@@ -286,15 +375,15 @@ static def(void, AddText, String text, int style, Body *body) {
 		ssize_t pos = String_Find(text, last, $("\n\n"));
 
 		if (pos == String_NotFound) {
-			Body_Enter(body);
-			Body_SetText(body, String_Slice(text, last));
-			Body_Return(body);
+			call(Enter);
+			call(SetText, String_Slice(text, last), 0);
+			call(Return);
 
 			break;
 		} else {
-			Body_Enter(body);
-			Body_SetText(body, String_Slice(text, last, pos - last));
-			Body_Return(body);
+			call(Enter);
+			call(SetText, String_Slice(text, last, pos - last), 0);
+			call(Return);
 		}
 
 		last = pos + 1;
@@ -315,7 +404,7 @@ static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body) 
 		Typography_Node *child = node->nodes[i];
 
 		if (child->type == Typography_NodeType_Text) {
-			String text = ref(CleanText)(this,
+			String text = call(CleanText,
 				Typography_Text(child)->value);
 
 			if (i == 0) {
@@ -324,15 +413,18 @@ static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body) 
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			ref(AddText)(this, text, style, body);
+			call(AddText, text, style, body);
 		} else if (child->type == Typography_NodeType_Item) {
-			ref(ParseItem)(this, child, style, body);
+			call(ParseItem, child, style, body);
 		}
 	}
 }
 
 static def(void, ParseSectionBlock, String title, Typography_Node *node) {
-	Section *sect = Chapter_AddSection(this->cur.chapter, title);
+	Section *sect = New(Section);
+	sect->title = String_Clone(title);
+	call(InitBody, &sect->body);
+	Array_Push(this->cur.chapter->sections, sect);
 
 	this->cur.section = sect;
 
@@ -340,7 +432,7 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 		Typography_Node *child = node->nodes[i];
 
 		if (child->type == Typography_NodeType_Text) {
-			String text = ref(CleanText)(this,
+			String text = call(CleanText,
 				Typography_Text(child)->value);
 
 			if (i == 0) {
@@ -349,15 +441,19 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			ref(AddText)(this, text, 0, &sect->body);
+			call(AddText, text, 0, &sect->body);
 		} else if (child->type == Typography_NodeType_Item) {
-			ref(ParseItem)(this, child, 0, &sect->body);
+			call(ParseItem, child, 0, &sect->body);
 		}
 	}
 }
 
 static def(void, ParseChapterBlock, String title, Typography_Node *node) {
-	Chapter *ch = Document_AddChapter(&this->document, title);
+	Chapter *ch = New(Chapter);
+	ch->title = String_Clone(title);
+	call(InitBody, &ch->body);
+	Array_Init(ch->sections, 0);
+	Array_Push(this->document.chapters, ch);
 
 	this->cur.chapter = ch;
 
@@ -377,7 +473,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 				continue;
 			}
 
-			String text = ref(CleanText)(this,
+			String text = call(CleanText,
 				Typography_Text(child)->value);
 
 			if (i == 0) {
@@ -386,13 +482,13 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			ref(AddText)(this, text, 0, &ch->body);
+			call(AddText, text, 0, &ch->body);
 		} else if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("section"))) {
-				ref(ParseSectionBlock)(this, Typography_Item(child)->options, child);
+				call(ParseSectionBlock, Typography_Item(child)->options, child);
 				introductoryText = false;
 			} else {
-				ref(ParseItem)(this, child, 0, &ch->body);
+				call(ParseItem, child, 0, &ch->body);
 			}
 		}
 	}
@@ -404,9 +500,9 @@ def(void, Parse, Typography_Node *node) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("meta"))) {
-				ref(ParseMetaBlock)(this, child);
+				call(ParseMetaBlock, child);
 			} else if (String_Equals(Typography_Item(child)->name, $("chapter"))) {
-				ref(ParseChapterBlock)(this, Typography_Item(child)->options, child);
+				call(ParseChapterBlock, Typography_Item(child)->options, child);
 			} else {
 				Logger_LogFmt(&logger, Logger_Level_Error,
 					$("line %: '%' not understood."),

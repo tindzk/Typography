@@ -18,8 +18,9 @@ typedef struct {
 	struct {
 		Chapter *chapter;
 		Section *section;
+		Body    *body;
 	} cur;
-} self;
+} Class(self);
 
 def(void, Init);
 def(void, Destroy);

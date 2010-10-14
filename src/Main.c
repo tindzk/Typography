@@ -78,13 +78,17 @@ int main(int argc, char *argv[]) {
 
 	Typography_Init(&tyo, &BufferedStream_Methods, &stream);
 
-	Parser parser;
-	Parser_Init(&parser);
+	struct {
+		Parser parser;
+	} private;
+
+	ParserClass parser = Parser_AsClass(&private.parser);
+	Parser_Init(parser);
 
 	try (&exc) {
 		Typography_Parse(&tyo);
-		Parser_Parse(&parser, Typography_GetRoot(&tyo));
-		Plugins_HTML(base, Parser_GetDocument(&parser), File_StdOut);
+		Parser_Parse(parser, Typography_GetRoot(&tyo));
+		Plugins_HTML(base, Parser_GetDocument(parser), File_StdOut);
 	} catchAny(e) {
 		Exception_Print(e);
 
@@ -94,7 +98,7 @@ int main(int argc, char *argv[]) {
 
 		res = EXIT_FAILURE;
 	} finally {
-		Parser_Destroy(&parser);
+		Parser_Destroy(parser);
 		Typography_Destroy(&tyo);
 	} tryEnd;
 
