@@ -6,7 +6,6 @@
 #import <FileStream.h>
 #import <BufferedStream.h>
 
-#import "Utils.h"
 #import "Parser.h"
 #import "Plugins/HTML.h"
 
