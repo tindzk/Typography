@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
 	String base = $(".");
 
-	if (argc >= 3) {
+	if (argc > 2) {
 		base = String_FromNul(argv[2]);
 	}
 
