@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 		Logger_Log(&logger, Logger_Level_Error,
 			$("No parameters specified."));
 
-		return EXIT_FAILURE;
+		return ExitStatus_Failure;
 	}
 
 	String filename = String_FromNul(argv[1]);
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 			$("Path '%' does not exist."),
 			filename);
 
-		return EXIT_FAILURE;
+		return ExitStatus_Failure;
 	}
 
 	String base = $(".");
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 		base = String_FromNul(argv[2]);
 	}
 
-	int res = EXIT_SUCCESS;
+	int res = ExitStatus_Success;
 
 	Typography tyo;
 
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
 		Backtrace_PrintTrace(e->trace, e->traceItems);
 #endif
 
-		res = EXIT_FAILURE;
+		res = ExitStatus_Failure;
 	} finally {
 		Parser_Destroy(parser);
 		Typography_Destroy(&tyo);
