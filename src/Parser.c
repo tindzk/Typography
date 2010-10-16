@@ -62,16 +62,14 @@ def(Document *, GetDocument) {
 
 static def(String, GetValue, Typography_Node *node) {
 	if (node->len == 0) {
-		Logger_LogFmt(&logger, Logger_Level_Error,
-			$("line %: value expected."),
+		Logger_Error(&logger, $("line %: value expected."),
 			Integer_ToString(node->line));
 
 		return $("");
 	}
 
 	if (node->len > 1) {
-		Logger_LogFmt(&logger, Logger_Level_Error,
-			$("line %: too many nodes."),
+		Logger_Error(&logger, $("line %: too many nodes."),
 			Integer_ToString(node->line));
 
 		return $("");
@@ -80,7 +78,7 @@ static def(String, GetValue, Typography_Node *node) {
 	Typography_Node *child = node->nodes[0];
 
 	if (child->type != Typography_NodeType_Text) {
-		Logger_LogFmt(&logger, Logger_Level_Error,
+		Logger_Error(&logger,
 			$("line %: node given, text expected."),
 			Integer_ToString(node->line));
 
@@ -98,7 +96,7 @@ static def(void, ParseMetaBlock, Typography_Node *node) {
 			if (String_Equals(Typography_Item(child)->name, $("title"))) {
 				String_Copy(&this->document.title, call(GetValue, child));
 			} else {
-				Logger_LogFmt(&logger, Logger_Level_Error,
+				Logger_Error(&logger,
 					$("line %: unknown meta tag '%'."),
 					Integer_ToString(child->line),
 					Typography_Item(child)->name);
@@ -201,7 +199,7 @@ static def(void, ParseList, Typography_Node *node, Body *body) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (!String_Equals(Typography_Item(child)->name, $("item"))) {
-				Logger_LogFmt(&logger, Logger_Level_Error,
+				Logger_Error(&logger,
 					$("line %: got '%', 'item' expected."),
 					Integer_ToString(child->line),
 					Typography_Item(child)->name);
@@ -353,7 +351,7 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 	} else if (String_Equals(name, $("image"))) {
 		call(ParseImage, child, body);
 	} else {
-		Logger_LogFmt(&logger, Logger_Level_Error,
+		Logger_Error(&logger,
 			$("line %: '%' not understood."),
 			Integer_ToString(child->line),
 			Typography_Item(child)->name);
@@ -465,7 +463,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 		if (child->type == Typography_NodeType_Text) {
 			if (!introductoryText) {
 				if (String_Trim(Typography_Text(child)->value).len > 0) {
-					Logger_LogFmt(&logger, Logger_Level_Error,
+					Logger_Error(&logger,
 						$("line %: text between sections is ignored."),
 						Integer_ToString(child->line));
 				}
@@ -504,7 +502,7 @@ def(void, Parse, Typography_Node *node) {
 			} else if (String_Equals(Typography_Item(child)->name, $("chapter"))) {
 				call(ParseChapterBlock, Typography_Item(child)->options, child);
 			} else {
-				Logger_LogFmt(&logger, Logger_Level_Error,
+				Logger_Error(&logger,
 					$("line %: '%' not understood."),
 					Integer_ToString(child->line),
 					Typography_Item(child)->name);

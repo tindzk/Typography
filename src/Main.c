@@ -41,17 +41,14 @@ int main(int argc, char *argv[]) {
 		Logger_Level_Trace);
 
 	if (argc <= 1) {
-		Logger_Log(&logger, Logger_Level_Error,
-			$("No parameters specified."));
-
+		Logger_Error(&logger, $("No parameters specified."));
 		return ExitStatus_Failure;
 	}
 
 	String filename = String_FromNul(argv[1]);
 
 	if (!Path_Exists(filename)) {
-		Logger_LogFmt(&logger, Logger_Level_Error,
-			$("Path '%' does not exist."),
+		Logger_Error(&logger, $("Path '%' does not exist."),
 			filename);
 
 		return ExitStatus_Failure;
