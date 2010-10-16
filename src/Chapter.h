@@ -3,7 +3,7 @@
 #import "Body.h"
 #import "Section.h"
 
-typedef struct {
+record {
 	String title;
 	Body body;
 	Array(Section *, *sections);

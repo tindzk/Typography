@@ -10,7 +10,7 @@
 #undef self
 #define self Parser
 
-typedef struct {
+record {
 	Document document;
 
 	struct {

@@ -8,7 +8,7 @@
 #define Body_DefaultLength 128
 #endif
 
-typedef enum {
+set {
 	ref(Styles_None)     = 0,
 	ref(Styles_Bold)     = Bit(0),
 	ref(Styles_Italic)   = Bit(1),
@@ -22,50 +22,50 @@ typedef enum {
 	ref(Styles_Number)   = Bit(9)
 } ref(Style);
 
-typedef enum {
+set {
 	ref(BlockType_None),
 	ref(BlockType_Note),
 	ref(BlockType_Warning)
 } ref(BlockType);
 
-typedef struct {
+record {
 	String value;
 	int style;
 } ref(Text);
 
-typedef struct {
+record {
 	ref(BlockType) type;
 } ref(Block);
 
-typedef struct {
+record {
 	String path;
 } ref(Image);
 
-typedef struct {
+record {
 	String value;
 } ref(Command);
 
-typedef struct {
+record {
 	String value;
 } ref(Code);
 
-typedef struct {
+record {
 	String addr;
 } ref(Mail);
 
-typedef struct {
+record {
 	String name;
 } ref(Anchor);
 
-typedef struct {
+record {
 	String anchor;
 } ref(Jump);
 
-typedef struct {
+record {
 	String url;
 } ref(Url);
 
-typedef enum {
+set {
 	ref(Type_Collection),
 	ref(Type_Block),
 	ref(Type_Paragraph),
@@ -81,7 +81,7 @@ typedef enum {
 	ref(Type_Jump)
 } ref(Type);
 
-typedef struct Body {
+record Body {
 	ref(Type) type;
 
 	union {

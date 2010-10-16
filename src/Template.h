@@ -7,7 +7,7 @@
 #undef self
 #define self Template
 
-typedef struct {
+record {
 	String base;
 	Document *doc;
 } MainTemplate;

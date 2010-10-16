@@ -3,7 +3,7 @@
 
 #import "Chapter.h"
 
-typedef struct {
+record {
 	String title;
 	Array(Chapter *, *chapters);
 } Document;

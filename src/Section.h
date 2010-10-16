@@ -2,7 +2,7 @@
 
 #import "Body.h"
 
-typedef struct {
+record {
 	String title;
 	Body body;
 } Section;
