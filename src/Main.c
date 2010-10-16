@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 		Parser parser;
 	} private;
 
-	ParserClass parser = Parser_AsClass(&private.parser);
+	ParserInstance parser = Parser_FromObject(&private.parser);
 	Parser_Init(parser);
 
 	try (&exc) {
