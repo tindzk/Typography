@@ -10,7 +10,7 @@
 #undef self
 #define self Parser
 
-record {
+class(self) {
 	Document document;
 
 	struct {
@@ -18,7 +18,7 @@ record {
 		Section *section;
 		Body    *body;
 	} cur;
-} Class(self);
+};
 
 def(void, Init);
 def(void, Destroy);

@@ -2,7 +2,7 @@
 
 #import "Body.h"
 
-record {
+class(Section) {
 	String title;
 	Body body;
-} Section;
+};

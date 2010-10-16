@@ -8,7 +8,7 @@
 #define Body_DefaultLength 128
 #endif
 
-set {
+set(ref(Style)) {
 	ref(Styles_None)     = 0,
 	ref(Styles_Bold)     = Bit(0),
 	ref(Styles_Italic)   = Bit(1),
@@ -20,52 +20,52 @@ set {
 	ref(Styles_Keyword)  = Bit(7),
 	ref(Styles_Path)     = Bit(8),
 	ref(Styles_Number)   = Bit(9)
-} ref(Style);
+};
 
-set {
+set(ref(BlockType)) {
 	ref(BlockType_None),
 	ref(BlockType_Note),
 	ref(BlockType_Warning)
-} ref(BlockType);
+};
 
-record {
+class(ref(Text)) {
 	String value;
 	int style;
-} ref(Text);
+};
 
-record {
+class(ref(Block)) {
 	ref(BlockType) type;
-} ref(Block);
+};
 
-record {
+class(ref(Image)) {
 	String path;
-} ref(Image);
+};
 
-record {
+class(ref(Command)) {
 	String value;
-} ref(Command);
+};
 
-record {
+class(ref(Code)) {
 	String value;
-} ref(Code);
+};
 
-record {
+class(ref(Mail)) {
 	String addr;
-} ref(Mail);
+};
 
-record {
+class(ref(Anchor)) {
 	String name;
-} ref(Anchor);
+};
 
-record {
+class(ref(Jump)) {
 	String anchor;
-} ref(Jump);
+};
 
-record {
+class(ref(Url)) {
 	String url;
-} ref(Url);
+};
 
-set {
+set(ref(Type)) {
 	ref(Type_Collection),
 	ref(Type_Block),
 	ref(Type_Paragraph),
@@ -79,9 +79,9 @@ set {
 	ref(Type_Mail),
 	ref(Type_Anchor),
 	ref(Type_Jump)
-} ref(Type);
+};
 
-record Body {
+class(Body) {
 	ref(Type) type;
 
 	union {
@@ -98,4 +98,4 @@ record Body {
 
 	Array(struct Body *, *nodes);
 	struct Body *parent;
-} Body;
+};

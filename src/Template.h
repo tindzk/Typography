@@ -7,9 +7,9 @@
 #undef self
 #define self Template
 
-record {
+record(MainTemplate) {
 	String base;
 	Document *doc;
-} MainTemplate;
+};
 
 void Template_Main(MainTemplate *, String *);

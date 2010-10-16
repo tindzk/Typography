@@ -3,8 +3,8 @@
 #import "Body.h"
 #import "Section.h"
 
-record {
+class(Chapter) {
 	String title;
 	Body body;
 	Array(Section *, *sections);
-} Chapter;
+};
