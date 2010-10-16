@@ -236,7 +236,7 @@ static def(String, CleanValue, String value) {
 	return String_Trim(out, String_TrimRight);
 }
 
-static def(void, ParseCommand, Typography_Node *child, Body *body) {
+static def(void, ParseCommand, Typography_Node *child) {
 	String value = call(GetValue,   child);
 	String clean = call(CleanValue, value);
 
@@ -245,7 +245,7 @@ static def(void, ParseCommand, Typography_Node *child, Body *body) {
 	call(Return);
 }
 
-static def(void, ParseCode, Typography_Node *child, Body *body) {
+static def(void, ParseCode, Typography_Node *child) {
 	String value = call(GetValue,   child);
 	String clean = call(CleanValue, value);
 
@@ -265,7 +265,7 @@ static def(void, ParseMail, Typography_Node *child, Body *body) {
 	call(Return);
 }
 
-static def(void, ParseAnchor, Typography_Node *child, Body *body) {
+static def(void, ParseAnchor, Typography_Node *child) {
 	String value = String_Trim(call(GetValue, child));
 
 	call(Enter);
@@ -295,7 +295,7 @@ static def(void, ParseUrl, Typography_Node *child, Body *body) {
 	call(Return);
 }
 
-static def(void, ParseImage, Typography_Node *child, Body *body) {
+static def(void, ParseImage, Typography_Node *child) {
 	String path = String_Trim(call(GetValue, child));
 
 	call(Enter);
@@ -339,17 +339,17 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 	} else if (String_Equals(name, $("url"))) {
 		call(ParseUrl, child, body);
 	} else if (String_Equals(name, $("command"))) {
-		call(ParseCommand, child, body);
+		call(ParseCommand, child);
 	} else if (String_Equals(name, $("code"))) {
-		call(ParseCode, child, body);
+		call(ParseCode, child);
 	} else if (String_Equals(name, $("mail"))) {
 		call(ParseMail, child, body);
 	} else if (String_Equals(name, $("anchor"))) {
-		call(ParseAnchor, child, body);
+		call(ParseAnchor, child);
 	} else if (String_Equals(name, $("jump"))) {
 		call(ParseJump, child, body);
 	} else if (String_Equals(name, $("image"))) {
-		call(ParseImage, child, body);
+		call(ParseImage, child);
 	} else {
 		Logger_Error(&logger,
 			$("line %: '%' not understood."),
@@ -358,7 +358,7 @@ static def(void, ParseItem, Typography_Node *child, int style, Body *body) {
 	}
 }
 
-static def(void, AddText, String text, int style, Body *body) {
+static def(void, AddText, String text, int style) {
 	if (style != 0) {
 		call(Enter);
 		call(SetText, text, style);
@@ -411,7 +411,7 @@ static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body) 
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			call(AddText, text, style, body);
+			call(AddText, text, style);
 		} else if (child->type == Typography_NodeType_Item) {
 			call(ParseItem, child, style, body);
 		}
@@ -439,7 +439,7 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			call(AddText, text, 0, &sect->body);
+			call(AddText, text, 0);
 		} else if (child->type == Typography_NodeType_Item) {
 			call(ParseItem, child, 0, &sect->body);
 		}
@@ -480,7 +480,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 				text = String_Trim(text, String_TrimRight);
 			}
 
-			call(AddText, text, 0, &ch->body);
+			call(AddText, text, 0);
 		} else if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("section"))) {
 				call(ParseSectionBlock, Typography_Item(child)->options, child);
