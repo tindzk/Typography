@@ -3,7 +3,7 @@
 
 #import "Chapter.h"
 
-class(Document) {
+record(Document) {
 	String title;
 	Array(Chapter *, *chapters);
 };

@@ -3,7 +3,7 @@
 #import "Body.h"
 #import "Section.h"
 
-class(Chapter) {
+record(Chapter) {
 	String title;
 	Body body;
 	Array(Section *, *sections);
