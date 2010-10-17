@@ -131,8 +131,8 @@ static def(void, Return) {
 }
 
 static def(void, SetBlock, Body_BlockType type) {
-	this->cur.body->type         = Body_Type_Block;
-	this->cur.body->u.block.type = type;
+	this->cur.body->type       = Body_Type_Block;
+	this->cur.body->block.type = type;
 }
 
 static def(void, SetParagraph) {
@@ -140,8 +140,8 @@ static def(void, SetParagraph) {
 }
 
 static def(void, SetUrl, String url) {
-	this->cur.body->type      = Body_Type_Url;
-	this->cur.body->u.url.url = String_Clone(url);
+	this->cur.body->type    = Body_Type_Url;
+	this->cur.body->url.url = String_Clone(url);
 }
 
 static def(void, SetList) {
@@ -153,39 +153,39 @@ static def(void, SetListItem) {
 }
 
 static def(void, SetText, String text, int style) {
-	this->cur.body->type         = Body_Type_Text;
-	this->cur.body->u.text.value = String_Clone(text);
-	this->cur.body->u.text.style = style;
+	this->cur.body->type       = Body_Type_Text;
+	this->cur.body->text.value = String_Clone(text);
+	this->cur.body->text.style = style;
 }
 
 static def(void, SetCommand, String value) {
-	this->cur.body->type            = Body_Type_Command;
-	this->cur.body->u.command.value = String_Clone(value);
+	this->cur.body->type          = Body_Type_Command;
+	this->cur.body->command.value = String_Clone(value);
 }
 
 static def(void, SetCode, String value) {
-	this->cur.body->type         = Body_Type_Code;
-	this->cur.body->u.code.value = String_Clone(value);
+	this->cur.body->type       = Body_Type_Code;
+	this->cur.body->code.value = String_Clone(value);
 }
 
 static def(void, SetMail, String addr) {
-	this->cur.body->type        = Body_Type_Mail;
-	this->cur.body->u.mail.addr = String_Clone(addr);
+	this->cur.body->type      = Body_Type_Mail;
+	this->cur.body->mail.addr = String_Clone(addr);
 }
 
 static def(void, SetImage, String path) {
-	this->cur.body->type         = Body_Type_Image;
-	this->cur.body->u.image.path = String_Clone(path);
+	this->cur.body->type       = Body_Type_Image;
+	this->cur.body->image.path = String_Clone(path);
 }
 
 static def(void, SetAnchor, String name) {
-	this->cur.body->type          = Body_Type_Anchor;
-	this->cur.body->u.anchor.name = String_Clone(name);
+	this->cur.body->type        = Body_Type_Anchor;
+	this->cur.body->anchor.name = String_Clone(name);
 }
 
 static def(void, SetJump, String anchor) {
-	this->cur.body->type           = Body_Type_Jump;
-	this->cur.body->u.jump.anchor  = String_Clone(anchor);
+	this->cur.body->type        = Body_Type_Jump;
+	this->cur.body->jump.anchor = String_Clone(anchor);
 }
 
 static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body);
@@ -237,20 +237,20 @@ static def(String, CleanValue, String value) {
 }
 
 static def(void, ParseCommand, Typography_Node *child) {
-	String value = call(GetValue,   child);
-	String clean = call(CleanValue, value);
+	String value   = call(GetValue,   child);
+	String cleaned = call(CleanValue, value);
 
 	call(Enter);
-	call(SetCommand, clean);
+	call(SetCommand, cleaned);
 	call(Return);
 }
 
 static def(void, ParseCode, Typography_Node *child) {
-	String value = call(GetValue,   child);
-	String clean = call(CleanValue, value);
+	String value   = call(GetValue,   child);
+	String cleaned = call(CleanValue, value);
 
 	call(Enter);
-	call(SetCode, clean);
+	call(SetCode, cleaned);
 	call(Return);
 }
 

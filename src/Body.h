@@ -81,7 +81,7 @@ set(ref(Type)) {
 	ref(Type_Jump)
 };
 
-class(Body) {
+class(self) {
 	ref(Type) type;
 
 	union {
@@ -94,8 +94,8 @@ class(Body) {
 		ref(Block)   block;
 		ref(Anchor)  anchor;
 		ref(Command) command;
-	} u;
+	};
 
 	Array(struct Body *, *nodes);
-	struct Body *parent;
+	struct self *parent;
 };
