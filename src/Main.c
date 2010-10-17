@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 		Typography_Parse(&tyo);
 		Parser_Parse(parser, Typography_GetRoot(&tyo));
 		Plugins_HTML(base, Parser_GetDocument(parser), File_StdOut);
-	} catchAny(e) {
+	} clean catchAny(e) {
 		Exception_Print(e);
 
 #if Exception_SaveTrace
