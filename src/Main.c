@@ -60,8 +60,6 @@ int main(int argc, char *argv[]) {
 		base = String_FromNul(argv[2]);
 	}
 
-	int res = ExitStatus_Success;
-
 	Typography tyo;
 
 	File file;
@@ -92,11 +90,11 @@ int main(int argc, char *argv[]) {
 		Backtrace_PrintTrace(e->trace, e->traceItems);
 #endif
 
-		res = ExitStatus_Failure;
+		excReturn ExitStatus_Failure;
 	} finally {
 		Parser_Destroy(parser);
 		Typography_Destroy(&tyo);
 	} tryEnd;
 
-	return res;
+	return ExitStatus_Success;
 }
