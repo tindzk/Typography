@@ -72,11 +72,7 @@ int main(int argc, char *argv[]) {
 
 	Typography_Init(&tyo, &BufferedStream_Methods, &stream);
 
-	struct {
-		Parser parser;
-	} private;
-
-	ParserInstance parser = Parser_FromObject(&private.parser);
+	ParserInstance parser = Parser_NewStack();
 	Parser_Init(parser);
 
 	try (&exc) {

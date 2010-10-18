@@ -20,6 +20,8 @@ class(self) {
 	} cur;
 };
 
+ExtendClass(self);
+
 def(void, Init);
 def(void, Destroy);
 def(Document *, GetDocument);
