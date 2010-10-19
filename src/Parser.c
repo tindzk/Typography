@@ -48,8 +48,8 @@ Body_BlockType ref(ResolveBlock)(String name) {
 }
 
 def(void, Init) {
-	Array_Init(this->document.chapters, 0);
-	this->document.title = HeapString(0);
+	this->document.chapters = ChapterArray_New(0);
+	this->document.title    = HeapString(0);
 }
 
 def(void, Destroy) {
@@ -108,7 +108,7 @@ static def(void, ParseMetaBlock, Typography_Node *node) {
 static def(void, InitBody, Body *body) {
 	body->type   = Body_Type_Collection;
 	body->parent = NULL;
-	Array_Init(body->nodes, Body_DefaultLength);
+	body->nodes  = BodyArray_New(Body_DefaultLength);
 
 	this->cur.body = body;
 }
@@ -118,9 +118,9 @@ static def(void, Enter) {
 
 	body->type   = Body_Type_Collection;
 	body->parent = this->cur.body;
-	Array_Init(body->nodes, Body_DefaultLength);
+	body->nodes  = BodyArray_New(Body_DefaultLength);
 
-	Array_Push(this->cur.body->nodes, body);
+	BodyArray_Push(&this->cur.body->nodes, body);
 
 	this->cur.body =
 		this->cur.body->nodes->buf[this->cur.body->nodes->len - 1];
@@ -422,7 +422,7 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 	Section *sect = New(Section);
 	sect->title = String_Clone(title);
 	call(InitBody, &sect->body);
-	Array_Push(this->cur.chapter->sections, sect);
+	SectionArray_Push(&this->cur.chapter->sections, sect);
 
 	this->cur.section = sect;
 
@@ -448,10 +448,13 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 
 static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 	Chapter *ch = New(Chapter);
-	ch->title = String_Clone(title);
+
+	ch->title    = String_Clone(title);
+	ch->sections = SectionArray_New(0);
+
 	call(InitBody, &ch->body);
-	Array_Init(ch->sections, 0);
-	Array_Push(this->document.chapters, ch);
+
+	ChapterArray_Push(&this->document.chapters, ch);
 
 	this->cur.chapter = ch;
 

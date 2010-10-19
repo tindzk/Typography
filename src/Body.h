@@ -81,6 +81,8 @@ set(ref(Type)) {
 	ref(Type_Jump)
 };
 
+Array_Define(struct self *, BodyArray);
+
 class(self) {
 	ref(Type) type;
 
@@ -96,6 +98,7 @@ class(self) {
 		ref(Command) command;
 	};
 
-	Array(struct Body *, *nodes);
+	BodyArray *nodes;
+
 	struct self *parent;
 };
