@@ -79,11 +79,11 @@ int main(int argc, char *argv[]) {
 		Typography_Parse(&tyo);
 		Parser_Parse(parser, Typography_GetRoot(&tyo));
 		Plugins_HTML(base, Parser_GetDocument(parser), File_StdOut);
-	} clean catchAny(e) {
-		Exception_Print(e);
+	} clean catchAny {
+		ExceptionManager_Print(&exc, e);
 
 #if Exception_SaveTrace
-		Backtrace_PrintTrace(e->trace, e->traceItems);
+		Backtrace_PrintTrace(exc.e.trace, exc.e.traceItems);
 #endif
 
 		excReturn ExitStatus_Failure;

@@ -13,6 +13,7 @@ mkdir -p build/{docsgen,Jivai}
 	build                        \
 	output=docsgen.bin           \
 	main=src/Main.c              \
+	manifest=Manifest.h          \
 	include=../Jivai/src         \
 	map=src:build/docsgen        \
 	map=../Jivai/src:build/Jivai \
