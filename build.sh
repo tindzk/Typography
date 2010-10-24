@@ -6,7 +6,7 @@ mkdir -p build/{docsgen,Jivai}
 	name=Template          \
 	itf=no                 \
 	add=Main:tpl/Main.html \
-	out=src/Template.c     \
+	out=src/Template       \
 	|| exit 1
 
 ../Jivai-Utils/jutils.bin        \
