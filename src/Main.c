@@ -72,13 +72,13 @@ int main(int argc, char *argv[]) {
 
 	Typography_Init(&tyo, &BufferedStream_Methods, &stream);
 
-	ParserInstance parser = Parser_NewStack();
-	Parser_Init(parser);
+	Parser parser;
+	Parser_Init(&parser);
 
 	try (&exc) {
 		Typography_Parse(&tyo);
-		Parser_Parse(parser, Typography_GetRoot(&tyo));
-		Plugins_HTML(base, Parser_GetDocument(parser), File_StdOut);
+		Parser_Parse(&parser, Typography_GetRoot(&tyo));
+		Plugins_HTML(base, Parser_GetDocument(&parser), File_StdOut);
 	} clean catchAny {
 		ExceptionManager_Print(&exc, e);
 
@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 
 		excReturn ExitStatus_Failure;
 	} finally {
-		Parser_Destroy(parser);
+		Parser_Destroy(&parser);
 		Typography_Destroy(&tyo);
 	} tryEnd;
 
