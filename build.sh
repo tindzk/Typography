@@ -15,6 +15,7 @@ mkdir -p build/{docsgen,Jivai}
 	main=src/Main.c              \
 	manifest=Manifest.h          \
 	include=../Jivai/src         \
+	include=../tplgen/include    \
 	map=src:build/docsgen        \
 	map=../Jivai/src:build/Jivai \
 	optimlevel=0                 \

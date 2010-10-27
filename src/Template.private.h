@@ -1,7 +1,7 @@
 #import "Document.h"
 #import "TemplateHelper.h"
 
-record(MainTemplate) {
+tpl(Main) {
 	String base;
 	Document *doc;
 };
