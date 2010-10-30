@@ -6,6 +6,7 @@ mkdir -p build/{docsgen,Jivai}
 	name=Template          \
 	itf=no                 \
 	add=Main:tpl/Main.html \
+	add=Body:tpl/Body.html \
 	out=src/Template       \
 	|| exit 1
 
