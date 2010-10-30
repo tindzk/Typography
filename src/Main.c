@@ -14,7 +14,7 @@ ExceptionManager exc;
 
 void OnLogMessage(__unused void *ptr, String msg, Logger_Level level, __unused String file, __unused int line) {
 	String fmt = String_Format($("[%] %\n"),
-		Logger_LevelToString(level), msg);
+		Logger_ResolveLevel(level), msg);
 
 	String_Print(fmt, true);
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	Integer0(&exc);
 	Typography0(&exc);
 
-	Logger_Init(&logger, &OnLogMessage, NULL,
+	Logger_Init(&logger, Callback(NULL, &OnLogMessage),
 		Logger_Level_Fatal |
 		Logger_Level_Crit  |
 		Logger_Level_Error |

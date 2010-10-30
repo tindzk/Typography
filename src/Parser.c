@@ -75,7 +75,7 @@ static def(String, GetValue, Typography_Node *node) {
 		return $("");
 	}
 
-	Typography_Node *child = node->nodes[0];
+	Typography_Node *child = node->buf[0];
 
 	if (child->type != Typography_NodeType_Text) {
 		Logger_Error(&logger,
@@ -90,7 +90,7 @@ static def(String, GetValue, Typography_Node *node) {
 
 static def(void, ParseMetaBlock, Typography_Node *node) {
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("title"))) {
@@ -195,7 +195,7 @@ static def(void, ParseList, Typography_Node *node, Body *body) {
 	call(SetList);
 
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Item) {
 			if (!String_Equals(Typography_Item(child)->name, $("item"))) {
@@ -399,7 +399,7 @@ static def(String, CleanText, String value) {
 
 static def(void, ParseStyleBlock, Typography_Node *node, int style, Body *body) {
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Text) {
 			String text = call(CleanText,
@@ -427,7 +427,7 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 	this->cur.section = sect;
 
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Text) {
 			String text = call(CleanText,
@@ -461,7 +461,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 	bool introductoryText = true;
 
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Text) {
 			if (!introductoryText) {
@@ -497,7 +497,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 
 def(void, Parse, Typography_Node *node) {
 	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->nodes[i];
+		Typography_Node *child = node->buf[i];
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("meta"))) {
