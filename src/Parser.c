@@ -52,10 +52,10 @@ def(void, Init, String path) {
 	File_Open(&file, path, FileStatus_ReadOnly);
 
 	BufferedStream stream;
-	BufferedStream_Init(&stream, &FileStream_Methods, &file);
+	BufferedStream_Init(&stream, &FileStreamImpl, &file);
 	BufferedStream_SetInputBuffer(&stream, 1024, 128);
 
-	Typography_Init(&this->tyo, &BufferedStream_Methods, &stream);
+	Typography_Init(&this->tyo, &BufferedStreamImpl, &stream);
 	Typography_Parse(&this->tyo);
 
 	BufferedStream_Close(&stream);
