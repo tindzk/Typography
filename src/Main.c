@@ -5,6 +5,7 @@
 #import <Typography.h>
 
 #import "Parser.h"
+#import "Document.h"
 #import "Plugins/HTML.h"
 
 Logger logger;
@@ -62,8 +63,12 @@ int main(int argc, char *argv[]) {
 	Parser_Init(&parser, filename);
 
 	try (&exc) {
-		Parser_Parse(&parser);
-		Plugins_HTML(base, Parser_GetDocument(&parser), File_StdOut);
+		Document doc;
+
+		doc.title    = Parser_GetMeta(&parser, $("title"));
+		doc.chapters = Parser_GetChapters(&parser);
+
+		Plugins_HTML(base, &doc, File_StdOut);
 	} clean catchAny {
 		ExceptionManager_Print(&exc, e);
 

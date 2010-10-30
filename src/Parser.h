@@ -9,13 +9,11 @@
 #import "Body.h"
 #import "Chapter.h"
 #import "Section.h"
-#import "Document.h"
 
 #undef self
 #define self Parser
 
 class(self) {
-	Document   document;
 	Typography tyo;
 
 	struct {
@@ -29,5 +27,5 @@ ExtendClass(self);
 
 def(void, Init, String path);
 def(void, Destroy);
-def(Document *, GetDocument);
-def(void, Parse);
+def(String, GetMeta, String name);
+def(ChapterArray *, GetChapters);

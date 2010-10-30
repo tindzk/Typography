@@ -10,3 +10,5 @@ record(Chapter) {
 	Body body;
 	SectionArray *sections;
 };
+
+Array_Define(Chapter *, ChapterArray);

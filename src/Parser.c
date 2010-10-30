@@ -48,9 +48,6 @@ Body_BlockType ref(ResolveBlock)(String name) {
 }
 
 def(void, Init, String path) {
-	this->document.chapters = ChapterArray_New(0);
-	this->document.title    = HeapString(0);
-
 	File file;
 	File_Open(&file, path, FileStatus_ReadOnly);
 
@@ -67,10 +64,6 @@ def(void, Init, String path) {
 
 def(void, Destroy) {
 	Typography_Destroy(&this->tyo);
-}
-
-def(Document *, GetDocument) {
-	return &this->document;
 }
 
 static def(String, GetValue, Typography_Node *node) {
@@ -99,23 +92,6 @@ static def(String, GetValue, Typography_Node *node) {
 	}
 
 	return Typography_Text(child)->value;
-}
-
-static def(void, ParseMetaBlock, Typography_Node *node) {
-	for (size_t i = 0; i < node->len; i++) {
-		Typography_Node *child = node->buf[i];
-
-		if (child->type == Typography_NodeType_Item) {
-			if (String_Equals(Typography_Item(child)->name, $("title"))) {
-				String_Copy(&this->document.title, call(GetValue, child));
-			} else {
-				Logger_Error(&logger,
-					$("line %: unknown meta tag '%'."),
-					Integer_ToString(child->line),
-					Typography_Item(child)->name);
-			}
-		}
-	}
 }
 
 static def(void, InitBody, Body *body) {
@@ -459,7 +435,7 @@ static def(void, ParseSectionBlock, String title, Typography_Node *node) {
 	}
 }
 
-static def(void, ParseChapterBlock, String title, Typography_Node *node) {
+static def(void, ParseChapterBlock, String title, Typography_Node *node, ChapterArray **res) {
 	Chapter *ch = New(Chapter);
 
 	ch->title    = String_Clone(title);
@@ -467,7 +443,7 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 
 	call(InitBody, &ch->body);
 
-	ChapterArray_Push(&this->document.chapters, ch);
+	ChapterArray_Push(res, ch);
 
 	this->cur.chapter = ch;
 
@@ -508,7 +484,21 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 	}
 }
 
-def(void, Parse) {
+static def(String, GetMetaValue, String name, Typography_Node *node) {
+	for (size_t i = 0; i < node->len; i++) {
+		Typography_Node *child = node->buf[i];
+
+		if (child->type == Typography_NodeType_Item) {
+			if (String_Equals(Typography_Item(child)->name, name)) {
+				return call(GetValue, child);
+			}
+		}
+	}
+
+	return $("");
+}
+
+def(String, GetMeta, String name) {
 	Typography_Node *node = Typography_GetRoot(&this->tyo);
 
 	for (size_t i = 0; i < node->len; i++) {
@@ -516,15 +506,29 @@ def(void, Parse) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, $("meta"))) {
-				call(ParseMetaBlock, child);
-			} else if (String_Equals(Typography_Item(child)->name, $("chapter"))) {
-				call(ParseChapterBlock, Typography_Item(child)->options, child);
-			} else {
-				Logger_Error(&logger,
-					$("line %: '%' not understood."),
-					Integer_ToString(child->line),
-					Typography_Item(child)->name);
+				return call(GetMetaValue, name, child);
 			}
 		}
 	}
+
+	return $("");
+}
+
+def(ChapterArray *, GetChapters) {
+	ChapterArray *res = ChapterArray_New(0);
+
+	Typography_Node *node = Typography_GetRoot(&this->tyo);
+
+	for (size_t i = 0; i < node->len; i++) {
+		Typography_Node *child = node->buf[i];
+
+		if (child->type == Typography_NodeType_Item) {
+			if (String_Equals(Typography_Item(child)->name, $("chapter"))) {
+				call(ParseChapterBlock,
+					Typography_Item(child)->options, child, &res);
+			}
+		}
+	}
+
+	return res;
 }
