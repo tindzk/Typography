@@ -1,6 +1,10 @@
+#import <File.h>
 #import <String.h>
 #import <Logger.h>
+#import <Integer.h>
 #import <Typography.h>
+#import <FileStream.h>
+#import <BufferedStream.h>
 
 #import "Body.h"
 #import "Chapter.h"
@@ -11,7 +15,8 @@
 #define self Parser
 
 class(self) {
-	Document document;
+	Document   document;
+	Typography tyo;
 
 	struct {
 		Chapter *chapter;
@@ -22,7 +27,7 @@ class(self) {
 
 ExtendClass(self);
 
-def(void, Init);
+def(void, Init, String path);
 def(void, Destroy);
 def(Document *, GetDocument);
-def(void, Parse, Typography_Node *node);
+def(void, Parse);

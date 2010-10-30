@@ -3,8 +3,6 @@
 #import <Signal.h>
 #import <Exception.h>
 #import <Typography.h>
-#import <FileStream.h>
-#import <BufferedStream.h>
 
 #import "Parser.h"
 #import "Plugins/HTML.h"
@@ -60,24 +58,11 @@ int main(int argc, char *argv[]) {
 		base = String_FromNul(argv[2]);
 	}
 
-	Typography tyo;
-
-	File file;
-	BufferedStream stream;
-
-	FileStream_Open(&file, filename, FileStatus_ReadOnly);
-
-	BufferedStream_Init(&stream, &FileStream_Methods, &file);
-	BufferedStream_SetInputBuffer(&stream, 1024, 128);
-
-	Typography_Init(&tyo, &BufferedStream_Methods, &stream);
-
 	Parser parser;
-	Parser_Init(&parser);
+	Parser_Init(&parser, filename);
 
 	try (&exc) {
-		Typography_Parse(&tyo);
-		Parser_Parse(&parser, Typography_GetRoot(&tyo));
+		Parser_Parse(&parser);
 		Plugins_HTML(base, Parser_GetDocument(&parser), File_StdOut);
 	} clean catchAny {
 		ExceptionManager_Print(&exc, e);
@@ -89,7 +74,6 @@ int main(int argc, char *argv[]) {
 		excReturn ExitStatus_Failure;
 	} finally {
 		Parser_Destroy(&parser);
-		Typography_Destroy(&tyo);
 	} tryEnd;
 
 	return ExitStatus_Success;

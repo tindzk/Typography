@@ -47,13 +47,26 @@ Body_BlockType ref(ResolveBlock)(String name) {
 	return Body_BlockType_None;
 }
 
-def(void, Init) {
+def(void, Init, String path) {
 	this->document.chapters = ChapterArray_New(0);
 	this->document.title    = HeapString(0);
+
+	File file;
+	File_Open(&file, path, FileStatus_ReadOnly);
+
+	BufferedStream stream;
+	BufferedStream_Init(&stream, &FileStream_Methods, &file);
+	BufferedStream_SetInputBuffer(&stream, 1024, 128);
+
+	Typography_Init(&this->tyo, &BufferedStream_Methods, &stream);
+	Typography_Parse(&this->tyo);
+
+	BufferedStream_Close(&stream);
+	BufferedStream_Destroy(&stream);
 }
 
 def(void, Destroy) {
-
+	Typography_Destroy(&this->tyo);
 }
 
 def(Document *, GetDocument) {
@@ -495,7 +508,9 @@ static def(void, ParseChapterBlock, String title, Typography_Node *node) {
 	}
 }
 
-def(void, Parse, Typography_Node *node) {
+def(void, Parse) {
+	Typography_Node *node = Typography_GetRoot(&this->tyo);
+
 	for (size_t i = 0; i < node->len; i++) {
 		Typography_Node *child = node->buf[i];
 
