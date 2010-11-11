@@ -63,10 +63,43 @@ int main(int argc, char *argv[]) {
 	Parser_Init(&parser, filename);
 
 	try (&exc) {
-		Document doc;
+		Document doc = {
+			.chapters = ChapterArray_New(0),
+			.title    = Parser_GetMeta(&parser, $("title"))
+		};
 
-		doc.title    = Parser_GetMeta(&parser, $("title"));
-		doc.chapters = Parser_GetChapters(&parser);
+		Parser_Nodes *nodes = Parser_GetNodesByName(&parser, $("chapter"));
+
+		foreach (node, nodes) {
+			Chapter *ch = New(Chapter);
+
+			ch->title    = node->options;
+			ch->sections = SectionArray_New(0);
+			ch->body     = Parser_GetBody(&parser, node->node);
+
+			Parser_Nodes *children = Parser_GetNodes(&parser, node->node);
+
+			foreach (child, children) {
+				if (!String_Equals(child->name, $("section"))) {
+					Parser_ParseItem(&parser, &ch->body, child->node, 0);
+				} else {
+					Section *sect = New(Section);
+
+					sect->title = child->options;
+					sect->body  = Parser_GetBody(&parser, child->node);
+
+					Parser_Nodes *items = Parser_GetNodes(&parser, child->node);
+
+					foreach (item, items) {
+						Parser_ParseItem(&parser, &sect->body, item->node, 0);
+					}
+
+					SectionArray_Push(&ch->sections, sect);
+				}
+			}
+
+			ChapterArray_Push(&doc.chapters, ch);
+		}
 
 		Plugins_HTML(base, &doc, File_StdOut);
 	} clean catchAny {

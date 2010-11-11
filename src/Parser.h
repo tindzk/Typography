@@ -7,25 +7,28 @@
 #import <BufferedStream.h>
 
 #import "Body.h"
-#import "Chapter.h"
-#import "Section.h"
 
 #undef self
 #define self Parser
 
+record(ref(Node)) {
+	String name;
+	String options;
+	Typography_Node *node;
+};
+
+Array_Define(ref(Node), ref(Nodes));
+
 class(self) {
 	Typography tyo;
-
-	struct {
-		Chapter *chapter;
-		Section *section;
-		Body    *body;
-	} cur;
 };
 
 ExtendClass(self);
 
 def(void, Init, String path);
 def(void, Destroy);
+def(void, ParseItem, Body *body, Typography_Node *child, int style);
 def(String, GetMeta, String name);
-def(ChapterArray *, GetChapters);
+def(Body, GetBody, Typography_Node *node);
+def(ref(Nodes) *, GetNodes, Typography_Node *node);
+def(ref(Nodes) *, GetNodesByName, String name);
