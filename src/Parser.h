@@ -27,8 +27,8 @@ ExtendClass(self);
 
 def(void, Init, String path);
 def(void, Destroy);
-def(void, ParseItem, Body *body, Typography_Node *child, int style);
+def(Typography_Node *, GetRoot);
 def(String, GetMeta, String name);
-def(Body, GetBody, Typography_Node *node);
+def(Body, GetBody, Typography_Node *node, String ignore);
 def(ref(Nodes) *, GetNodes, Typography_Node *node);
-def(ref(Nodes) *, GetNodesByName, String name);
+def(ref(Node), GetNodeByName, String name);

@@ -68,34 +68,32 @@ int main(int argc, char *argv[]) {
 			.title    = Parser_GetMeta(&parser, $("title"))
 		};
 
-		Parser_Nodes *nodes = Parser_GetNodesByName(&parser, $("chapter"));
+		Parser_Nodes *nodes = Parser_GetNodes(&parser, Parser_GetRoot(&parser));
 
 		foreach (node, nodes) {
+			if (!String_Equals(node->name, $("chapter"))) {
+				continue;
+			}
+
 			Chapter *ch = New(Chapter);
 
 			ch->title    = node->options;
 			ch->sections = SectionArray_New(0);
-			ch->body     = Parser_GetBody(&parser, node->node);
+			ch->body     = Parser_GetBody(&parser, node->node, $("section"));
 
 			Parser_Nodes *children = Parser_GetNodes(&parser, node->node);
 
 			foreach (child, children) {
 				if (!String_Equals(child->name, $("section"))) {
-					Parser_ParseItem(&parser, &ch->body, child->node, 0);
-				} else {
-					Section *sect = New(Section);
-
-					sect->title = child->options;
-					sect->body  = Parser_GetBody(&parser, child->node);
-
-					Parser_Nodes *items = Parser_GetNodes(&parser, child->node);
-
-					foreach (item, items) {
-						Parser_ParseItem(&parser, &sect->body, item->node, 0);
-					}
-
-					SectionArray_Push(&ch->sections, sect);
+					continue;
 				}
+
+				Section *sect = New(Section);
+
+				sect->title = child->options;
+				sect->body  = Parser_GetBody(&parser, child->node, $(""));
+
+				SectionArray_Push(&ch->sections, sect);
 			}
 
 			ChapterArray_Push(&doc.chapters, ch);

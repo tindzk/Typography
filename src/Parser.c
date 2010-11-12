@@ -66,6 +66,10 @@ def(void, Destroy) {
 	Typography_Destroy(&this->tyo);
 }
 
+def(Typography_Node *, GetRoot) {
+	return Typography_GetRoot(&this->tyo);
+}
+
 static def(String, GetValue, Typography_Node *node) {
 	if (node->len == 0) {
 		Logger_Error(&logger, $("line %: value expected."),
@@ -279,7 +283,7 @@ static def(void, ParseBlock, Body *body, Body_BlockType type, Typography_Node *c
 	call(ParseStyleBlock, block, child, 0);
 }
 
-def(void, ParseItem, Body *body, Typography_Node *child, int style) {
+static def(void, ParseItem, Body *body, Typography_Node *child, int style) {
 	Body_Style _style;
 	Body_BlockType type;
 
@@ -403,7 +407,7 @@ def(String, GetMeta, String name) {
 	return $("");
 }
 
-def(Body, GetBody, Typography_Node *node) {
+def(Body, GetBody, Typography_Node *node, String ignore) {
 	Body body = {
 		.type   = Body_Type_Collection,
 		.nodes  = BodyArray_New(Body_DefaultLength),
@@ -424,6 +428,12 @@ def(Body, GetBody, Typography_Node *node) {
 			}
 
 			call(AddText, &body, text, 0);
+		} else if (child->type == Typography_NodeType_Item) {
+			if (String_Equals(Typography_Item(child)->name, ignore)) {
+				continue;
+			}
+
+			call(ParseItem, &body, child, 0);
 		}
 	}
 
@@ -450,9 +460,7 @@ def(ref(Nodes) *, GetNodes, Typography_Node *node) {
 	return res;
 }
 
-def(ref(Nodes) *, GetNodesByName, String name) {
-	ref(Nodes) *res = scall(Nodes_New, 0);
-
+def(ref(Node), GetNodeByName, String name) {
 	Typography_Node *node = Typography_GetRoot(&this->tyo);
 
 	for (size_t i = 0; i < node->len; i++) {
@@ -460,16 +468,18 @@ def(ref(Nodes) *, GetNodesByName, String name) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, name)) {
-				ref(Node) node = {
+				return (ref(Node)) {
 					.name    = name,
 					.options = Typography_Item(child)->options,
 					.node    = child
 				};
-
-				scall(Nodes_Push, &res, node);
 			}
 		}
 	}
 
-	return res;
+	return (ref(Node)) {
+		.name    = $(""),
+		.options = $(""),
+		.node    = NULL
+	};
 }
