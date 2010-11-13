@@ -385,7 +385,7 @@ static def(String, GetMetaValue, String name, Typography_Node *node) {
 
 		if (child->type == Typography_NodeType_Item) {
 			if (String_Equals(Typography_Item(child)->name, name)) {
-				return call(GetValue, child);
+				return String_Disown(call(GetValue, child));
 			}
 		}
 	}
@@ -449,8 +449,8 @@ def(ref(Nodes) *, GetNodes, Typography_Node *node) {
 
 		if (child->type == Typography_NodeType_Item) {
 			ref(Node) node = {
-				.name    = Typography_Item(child)->name,
-				.options = Typography_Item(child)->options,
+				.name    = String_Disown(Typography_Item(child)->name),
+				.options = String_Disown(Typography_Item(child)->options),
 				.node    = child
 			};
 
@@ -471,7 +471,7 @@ def(ref(Node), GetNodeByName, String name) {
 			if (String_Equals(Typography_Item(child)->name, name)) {
 				return (ref(Node)) {
 					.name    = name,
-					.options = Typography_Item(child)->options,
+					.options = String_Disown(Typography_Item(child)->options),
 					.node    = child
 				};
 			}
