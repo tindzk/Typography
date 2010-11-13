@@ -78,7 +78,8 @@ set(ref(Type)) {
 	ref(Type_Code),
 	ref(Type_Mail),
 	ref(Type_Anchor),
-	ref(Type_Jump)
+	ref(Type_Jump),
+	ref(Type_Empty)
 };
 
 Array_Define(struct self *, BodyArray);
@@ -100,3 +101,5 @@ class(self) {
 
 	BodyArray *nodes;
 };
+
+def(self, Empty);
