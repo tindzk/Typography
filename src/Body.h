@@ -102,5 +102,5 @@ class(self) {
 	BodyArray *nodes;
 };
 
-def(self, Empty);
+sdef(self, Empty);
 def(void, Destroy);

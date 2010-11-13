@@ -1,7 +1,7 @@
 #import "Body.h"
 #import "App.h"
 
-def(self, Empty) {
+sdef(self, Empty) {
 	self res;
 
 	res.type  = ref(Type_Empty);
