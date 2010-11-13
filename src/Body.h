@@ -99,6 +99,4 @@ class(self) {
 	};
 
 	BodyArray *nodes;
-
-	struct self *parent;
 };

@@ -104,9 +104,8 @@ static def(String, GetValue, Typography_Node *node) {
 static def(Body *, Enter, Body *parent) {
 	Body *body = New(Body);
 
-	body->type   = Body_Type_Collection;
-	body->parent = parent;
-	body->nodes  = BodyArray_New(Body_DefaultLength);
+	body->type  = Body_Type_Collection;
+	body->nodes = BodyArray_New(Body_DefaultLength);
 
 	BodyArray_Push(&parent->nodes, body);
 
@@ -412,9 +411,8 @@ def(String, GetMeta, String name) {
 
 def(Body, GetBody, Typography_Node *node, String ignore) {
 	Body body = {
-		.type   = Body_Type_Collection,
-		.nodes  = BodyArray_New(Body_DefaultLength),
-		.parent = NULL
+		.type  = Body_Type_Collection,
+		.nodes = BodyArray_New(Body_DefaultLength)
 	};
 
 	for (size_t i = 0; i < node->len; i++) {
