@@ -97,10 +97,27 @@ int main(int argc, char *argv[]) {
 				SectionArray_Push(&ch->sections, sect);
 			}
 
+			Parser_Nodes_Free(children);
+
 			ChapterArray_Push(&doc.chapters, ch);
 		}
 
+		Parser_Nodes_Free(nodes);
+
 		Plugins_HTML(base, &doc, File_StdOut);
+
+		foreach (ch, doc.chapters) {
+			foreach (sect, (*ch)->sections) {
+				Body_Destroy(&(*sect)->body);
+				Memory_Free(*sect);
+			}
+
+			SectionArray_Free((*ch)->sections);
+			Body_Destroy(&(*ch)->body);
+			Memory_Free(*ch);
+		}
+
+		ChapterArray_Free(doc.chapters);
 	} clean catchAny {
 		ExceptionManager_Print(&exc, e);
 

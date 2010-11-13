@@ -103,3 +103,4 @@ class(self) {
 };
 
 def(self, Empty);
+def(void, Destroy);

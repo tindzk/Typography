@@ -123,7 +123,7 @@ static def(void, SetParagraph, Body *body) {
 
 static def(void, SetUrl, Body *body, String url) {
 	body->type    = Body_Type_Url;
-	body->url.url = String_Clone(url);
+	body->url.url = url;
 }
 
 static def(void, SetList, Body *body) {
@@ -136,38 +136,38 @@ static def(void, SetListItem, Body *body) {
 
 static def(void, SetText, Body *body, String text, int style) {
 	body->type       = Body_Type_Text;
-	body->text.value = String_Clone(text);
+	body->text.value = text;
 	body->text.style = style;
 }
 
 static def(void, SetCommand, Body *body, String value) {
 	body->type          = Body_Type_Command;
-	body->command.value = String_Clone(value);
+	body->command.value = value;
 }
 
 static def(void, SetCode, Body *body, String value) {
 	body->type       = Body_Type_Code;
-	body->code.value = String_Clone(value);
+	body->code.value = value;
 }
 
 static def(void, SetMail, Body *body, String addr) {
 	body->type      = Body_Type_Mail;
-	body->mail.addr = String_Clone(addr);
+	body->mail.addr = addr;
 }
 
 static def(void, SetImage, Body *body, String path) {
 	body->type       = Body_Type_Image;
-	body->image.path = String_Clone(path);
+	body->image.path = path;
 }
 
 static def(void, SetAnchor, Body *body, String name) {
 	body->type        = Body_Type_Anchor;
-	body->anchor.name = String_Clone(name);
+	body->anchor.name = name;
 }
 
 static def(void, SetJump, Body *body, String anchor) {
 	body->type        = Body_Type_Jump;
-	body->jump.anchor = String_Clone(anchor);
+	body->jump.anchor = anchor;
 }
 
 static def(void, ParseStyleBlock, Body *body, Typography_Node *node, int style);
@@ -234,7 +234,7 @@ static def(void, ParseMail, Body *body, Typography_Node *child) {
 	String addr = String_Trim(Typography_Item(child)->options);
 
 	Body *mail = call(Enter, body);
-	call(SetMail, mail, addr);
+	call(SetMail, mail, String_Clone(addr));
 
 	call(ParseStyleBlock, mail, child, 0);
 }
@@ -243,14 +243,14 @@ static def(void, ParseAnchor, Body *body, Typography_Node *child) {
 	String value = String_Trim(call(GetValue, child));
 
 	Body *anchor = call(Enter, body);
-	call(SetAnchor, anchor, value);
+	call(SetAnchor, anchor, String_Clone(value));
 }
 
 static def(void, ParseJump, Body *body, Typography_Node *child) {
 	String anchor = String_Trim(Typography_Item(child)->options);
 
 	Body *jump = call(Enter, body);
-	call(SetJump, jump, anchor);
+	call(SetJump, jump, String_Clone(anchor));
 
 	call(ParseStyleBlock, jump, child, 0);
 }
@@ -259,7 +259,7 @@ static def(void, ParseUrl, Body *body, Typography_Node *child) {
 	String url = String_Trim(Typography_Item(child)->options);
 
 	Body *elem = call(Enter, body);
-	call(SetUrl, elem, url);
+	call(SetUrl, elem, String_Clone(url));
 
 	call(ParseStyleBlock, elem, child, 0);
 }
@@ -268,7 +268,7 @@ static def(void, ParseImage, Body *body, Typography_Node *child) {
 	String path = String_Trim(call(GetValue, child));
 
 	Body *image = call(Enter, body);
-	call(SetImage, image, path);
+	call(SetImage, image, String_Clone(path));
 }
 
 static def(void, ParseParagraph, Body *body, Typography_Node *child) {
@@ -336,13 +336,17 @@ static def(void, AddText, Body *body, String text, int style) {
 		ssize_t pos = String_Find(text, last, $("\n\n"));
 
 		if (pos == String_NotFound) {
+			String_Crop(&text, last);
+
 			Body *elem = call(Enter, body);
-			call(SetText, elem, String_Slice(text, last), 0);
+			call(SetText, elem, text, 0);
 
 			break;
 		} else {
+			String_Crop(&text, last, pos - last);
+
 			Body *elem = call(Enter, body);
-			call(SetText, elem, String_Slice(text, last, pos - last), 0);
+			call(SetText, elem, text, 0);
 		}
 
 		last = pos + 1;
@@ -367,9 +371,9 @@ static def(void, ParseStyleBlock, Body *body, Typography_Node *node, int style) 
 				Typography_Text(child)->value);
 
 			if (i == 0) {
-				text = String_Trim(text, String_TrimLeft);
+				String_Trim(&text, String_TrimLeft);
 			} else if (i == node->len - 1) {
-				text = String_Trim(text, String_TrimRight);
+				String_Trim(&text, String_TrimRight);
 			}
 
 			call(AddText, body, text, style);
@@ -423,9 +427,9 @@ def(Body, GetBody, Typography_Node *node, String ignore) {
 				Typography_Text(child)->value);
 
 			if (i == 0) {
-				text = String_Trim(text, String_TrimLeft);
+				String_Trim(&text, String_TrimLeft);
 			} else if (i == node->len - 1) {
-				text = String_Trim(text, String_TrimRight);
+				String_Trim(&text, String_TrimRight);
 			}
 
 			call(AddText, &body, text, 0);
