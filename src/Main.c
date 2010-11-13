@@ -60,7 +60,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	Parser parser;
-	Parser_Init(&parser, filename);
+	Parser_Init(&parser);
+	Parser_Parse(&parser, filename);
 
 	try (&exc) {
 		Document doc = {

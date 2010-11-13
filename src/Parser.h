@@ -25,8 +25,9 @@ class(self) {
 
 ExtendClass(self);
 
-def(void, Init, String path);
+def(void, Init);
 def(void, Destroy);
+def(void, Parse, String path);
 def(Typography_Node *, GetRoot);
 def(String, GetMeta, String name);
 def(Body, GetBody, Typography_Node *node, String ignore);

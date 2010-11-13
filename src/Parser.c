@@ -47,7 +47,11 @@ Body_BlockType ref(ResolveBlock)(String name) {
 	return Body_BlockType_None;
 }
 
-def(void, Init, String path) {
+def(void, Init) {
+	Typography_Init(&this->tyo);
+}
+
+def(void, Parse, String path) {
 	File file;
 	File_Open(&file, path, FileStatus_ReadOnly);
 
@@ -55,8 +59,7 @@ def(void, Init, String path) {
 	BufferedStream_Init(&stream, &FileStreamImpl, &file);
 	BufferedStream_SetInputBuffer(&stream, 1024, 128);
 
-	Typography_Init(&this->tyo, &BufferedStreamImpl, &stream);
-	Typography_Parse(&this->tyo);
+	Typography_Parse(&this->tyo, &BufferedStreamImpl, &stream);
 
 	BufferedStream_Close(&stream);
 	BufferedStream_Destroy(&stream);
