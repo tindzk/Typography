@@ -31,16 +31,12 @@
 	{for $chapter in #doc->chapters}
 		<h2><a href="#{$chapter->title}" name="{$chapter->title}">{$chapter->title}</a></h2>
 
-		{for $body in $chapter->body.nodes}
-			{block bodyEntry $body}
-		{end}
+		{block bodyEntry &$chapter->body}
 
 		{for $section in $chapter->sections}
 			<h3>{$section->title}</h3>
 
-			{for $body in $section->body.nodes}
-				{block bodyEntry $body}
-			{end}
+			{block bodyEntry &$section->body}
 		{end}
 	{end}
 </body>
