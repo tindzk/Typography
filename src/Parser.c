@@ -219,7 +219,7 @@ static def(void, ParseCommand, Body *body, Typography_Node *child) {
 	String cleaned = call(CleanValue, value);
 
 	Body *cmd = call(Enter, body);
-	call(SetCommand, cmd, cleaned);
+	call(SetCommand, cmd, String_Clone(cleaned));
 }
 
 static def(void, ParseCode, Body *body, Typography_Node *child) {
@@ -227,7 +227,7 @@ static def(void, ParseCode, Body *body, Typography_Node *child) {
 	String cleaned = call(CleanValue, value);
 
 	Body *code = call(Enter, body);
-	call(SetCode, code, cleaned);
+	call(SetCode, code, String_Clone(cleaned));
 }
 
 static def(void, ParseMail, Body *body, Typography_Node *child) {
