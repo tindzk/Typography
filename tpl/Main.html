@@ -36,7 +36,7 @@
 		{end}
 
 		{for $section in $chapter->sections}
-			<h3>{pass html $section->title}</h3>
+			<h3>{$section->title}</h3>
 
 			{for $body in $section->body.nodes}
 				{block bodyEntry $body}
