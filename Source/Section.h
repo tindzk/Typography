@@ -1,6 +1,5 @@
 #import <String.h>
-
-#import "Body.h"
+#import <docslib/Body.h>
 
 record(Section) {
 	String title;

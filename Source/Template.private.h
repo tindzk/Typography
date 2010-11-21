@@ -1,5 +1,5 @@
 #import "Document.h"
-#import <TemplateHelper.h>
+#import <docslib/TemplateHelper.h>
 
 tpl(Main) {
 	String base;

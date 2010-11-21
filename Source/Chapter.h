@@ -1,6 +1,6 @@
 #import <String.h>
+#import <docslib/Body.h>
 
-#import "Body.h"
 #import "Section.h"
 
 Array_Define(Section *, SectionArray);

@@ -3,8 +3,8 @@
 #import <Signal.h>
 #import <Exception.h>
 #import <Typography.h>
+#import <docslib/Parser.h>
 
-#import "Parser.h"
 #import "Document.h"
 #import "Plugins/HTML.h"
 
