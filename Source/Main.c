@@ -21,15 +21,7 @@ void OnLogMessage(__unused void *ptr, String msg, Logger_Level level, __unused S
 }
 
 int main(int argc, char *argv[]) {
-	ExceptionManager_Init(&exc);
-
-	Path0(&exc);
-	File0(&exc);
-	Memory0(&exc);
-	String0(&exc);
-	Signal0(&exc);
-	Integer0(&exc);
-	Typography0(&exc);
+	Signal0();
 
 	Logger_Init(&logger, Callback(NULL, &OnLogMessage),
 		Logger_Level_Fatal |
@@ -63,7 +55,7 @@ int main(int argc, char *argv[]) {
 	Parser_Init(&parser);
 	Parser_Parse(&parser, filename);
 
-	try (&exc) {
+	try {
 		Document doc = {
 			.chapters = ChapterArray_New(0),
 			.title    = Parser_GetMeta(&parser, $("title"))
@@ -119,7 +111,7 @@ int main(int argc, char *argv[]) {
 
 		ChapterArray_Free(doc.chapters);
 	} clean catchAny {
-		ExceptionManager_Print(&exc, e);
+		Exception_Print(e);
 
 #if Exception_SaveTrace
 		Backtrace_PrintTrace(exc.e.trace, exc.e.traceItems);
