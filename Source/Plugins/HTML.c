@@ -1,5 +1,4 @@
 #import "HTML.h"
-#import <App.h>
 
 void Plugins_HTML(String base, Document *doc, File *file) {
 	String s = HeapString(1024);
