@@ -22,6 +22,6 @@ mkdir -p Build/{docsgen,docslib,Jivai}
 	map=../Jivai/src:Build/Jivai \
 	map=../docslib:Build/docslib \
 	optimlevel=0                 \
-	inclhdr=Config.h             \
+	inclhdr=../Jivai/config.h    \
 	dbgsym=yes                   \
 	link=@bfd

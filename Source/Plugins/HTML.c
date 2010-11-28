@@ -11,8 +11,7 @@ void Plugins_HTML(String base, Document *doc, File *file) {
 	Template_Main(&tpl, &s);
 
 	for (size_t total = 0; total < s.len; ) {
-		size_t written = File_Write(
-			File_FromObject(file),
+		size_t written = File_Write(file,
 			s.buf + total,
 			s.len - total);
 
