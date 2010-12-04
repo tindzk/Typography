@@ -1,42 +1,32 @@
-<head>
-	<title>{#doc->title}</title>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>{#doc->title}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="{#base}/style.css" rel="stylesheet" type="text/css" />
+	</head>
 
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<body>
+		<h1>{#doc->title}</h1>
 
-	<script type="text/javascript" src="{#base}/syntaxhighlighter/scripts/XRegExp.js"></script>
-	<script type="text/javascript" src="{#base}/syntaxhighlighter/scripts/shCore.js"></script>
-	<script type="text/javascript" src="{#base}/syntaxhighlighter/scripts/shBrushCpp.js"></script>
-	<script type="text/javascript" src="{#base}/syntaxhighlighter/scripts/shBrushBash.js"></script>
+		<h2><a href="#toc" name="toc">Table of Contents</a></h2>
+		<ul>
+			{for $chapter in #doc->chapters}
+				<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
+			{end}
+		</ul>
 
-	<link href="{#base}/syntaxhighlighter/styles/shCore.css"         rel="stylesheet" type="text/css" />
-	<link href="{#base}/syntaxhighlighter/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
-
-	<script type="text/javascript">
-		 SyntaxHighlighter.all()
-	</script>
-
-	<link href="{#base}/style.css" rel="stylesheet" type="text/css" />
-</head>
-
-<body>
-	<h1>{#doc->title}</h1>
-
-	<h2><a href="#toc" name="toc">Table of Contents</a></h2>
-	<ul>
 		{for $chapter in #doc->chapters}
-			<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
+			<h2><a href="#{$chapter->title}" name="{$chapter->title}">{$chapter->title}</a></h2>
+
+			{block bodyEntry &$chapter->body}
+
+			{for $section in $chapter->sections}
+				<h3>{$section->title}</h3>
+
+				{block bodyEntry &$section->body}
+			{end}
 		{end}
-	</ul>
-
-	{for $chapter in #doc->chapters}
-		<h2><a href="#{$chapter->title}" name="{$chapter->title}">{$chapter->title}</a></h2>
-
-		{block bodyEntry &$chapter->body}
-
-		{for $section in $chapter->sections}
-			<h3>{$section->title}</h3>
-
-			{block bodyEntry &$section->body}
-		{end}
-	{end}
-</body>
+	</body>
+</html>
