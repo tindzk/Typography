@@ -3,7 +3,7 @@
 
 #import "Section.h"
 
-Array_Define(Section *, SectionArray);
+Array(Section *, SectionArray);
 
 record(Chapter) {
 	String title;
@@ -11,4 +11,4 @@ record(Chapter) {
 	SectionArray *sections;
 };
 
-Array_Define(Chapter *, ChapterArray);
+Array(Chapter *, ChapterArray);
