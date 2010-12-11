@@ -28,9 +28,9 @@ p {
 }
 
 .path {
-	font-style: italic;
-	font-size: 16px;
-	color: #219161;
+	font: 1.4em Monaco,Lucida Console,monospace;
+	font-size: 11px;
+	color: #2060A0;
 }
 
 .number {
@@ -38,7 +38,7 @@ p {
 }
 
 .class, .macro, .function {
-	color: #0000FF;
+	color: #5F5A60;
 	font-size: 12px;
 	line-height: 18px;
 	font-family: Monaco, Consolas, "Lucida Console", monospace;
