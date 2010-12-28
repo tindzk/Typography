@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 mkdir -p Build/{docsgen,docslib,Jivai}
 
