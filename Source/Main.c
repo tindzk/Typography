@@ -1,6 +1,7 @@
 #import <Path.h>
 #import <File.h>
 #import <Signal.h>
+#import <Terminal.h>
 #import <Exception.h>
 #import <Typography.h>
 #import <docslib/Parser.h>
@@ -9,14 +10,17 @@
 #import "Plugins/HTML.h"
 
 Logger logger;
-ExceptionManager exc;
+Terminal term;
 
 void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, __unused String file, __unused int line) {
-	String_FmtPrint($("[%] $\n"), Logger_ResolveLevel(level), msg);
+	Terminal_FmtPrint(&term, $("[%] $\n"),
+		Logger_ResolveLevel(level), msg);
 }
 
 int main(int argc, char *argv[]) {
 	Signal0();
+
+	Terminal_Init(&term, File_StdIn, File_StdOut, false);
 
 	Logger_Init(&logger, Callback(NULL, &OnLogMessage),
 		Logger_Level_Fatal |
@@ -109,12 +113,13 @@ int main(int argc, char *argv[]) {
 		Exception_Print(e);
 
 #if Exception_SaveTrace
-		Backtrace_PrintTrace(exc.e.trace, exc.e.traceItems);
+		Backtrace_PrintTrace(__exc_mgr.e.trace, __exc_mgr.e.traceItems);
 #endif
 
 		excReturn ExitStatus_Failure;
 	} finally {
 		Parser_Destroy(&parser);
+		Terminal_Destroy(&term);
 	} tryEnd;
 
 	return ExitStatus_Success;
