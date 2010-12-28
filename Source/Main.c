@@ -11,13 +11,8 @@
 Logger logger;
 ExceptionManager exc;
 
-void OnLogMessage(__unused void *ptr, String msg, Logger_Level level, __unused String file, __unused int line) {
-	String fmt = String_Format($("[%] %\n"),
-		Logger_ResolveLevel(level), msg);
-
-	String_Print(fmt, true);
-
-	String_Destroy(&fmt);
+void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, __unused String file, __unused int line) {
+	String_FmtPrint($("[%] $\n"), Logger_ResolveLevel(level), msg);
 }
 
 int main(int argc, char *argv[]) {
