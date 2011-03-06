@@ -1,7 +1,7 @@
 #import "HTML.h"
 
-void Plugins_HTML(String base, Document *doc, File *file) {
-	String s = HeapString(1024);
+void Plugins_HTML(ProtString base, Document *doc, File *file) {
+	String s = String_New(1024);
 
 	MainTemplate tpl;
 

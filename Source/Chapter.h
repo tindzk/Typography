@@ -6,8 +6,8 @@
 Array(Section *, SectionArray);
 
 record(Chapter) {
-	String title;
-	Body body;
+	Body         body;
+	ProtString   title;
 	SectionArray *sections;
 };
 

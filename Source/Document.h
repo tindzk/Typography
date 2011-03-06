@@ -4,6 +4,6 @@
 #import "Chapter.h"
 
 record(Document) {
-	String title;
+	ProtString   title;
 	ChapterArray *chapters;
 };

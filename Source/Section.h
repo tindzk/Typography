@@ -2,6 +2,6 @@
 #import <docslib/Body.h>
 
 record(Section) {
-	String title;
+	ProtString title;
 	Body body;
 };

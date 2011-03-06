@@ -20,7 +20,7 @@ void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, __unuse
 int main(int argc, char *argv[]) {
 	Signal0();
 
-	Terminal_Init(&term, File_StdIn, File_StdOut, false);
+	term = Terminal_New(File_StdIn, File_StdOut, false);
 
 	Logger_Init(&logger, Callback(NULL, &OnLogMessage),
 		Logger_Level_Fatal |
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 		return ExitStatus_Failure;
 	}
 
-	String filename = String_FromNul(argv[1]);
+	ProtString filename = String_FromNul(argv[1]);
 
 	if (!Path_Exists(filename)) {
 		Logger_Error(&logger, $("Path '%' does not exist."),
@@ -44,14 +44,13 @@ int main(int argc, char *argv[]) {
 		return ExitStatus_Failure;
 	}
 
-	String base = $(".");
+	ProtString base = $(".");
 
 	if (argc > 2) {
 		base = String_FromNul(argv[2]);
 	}
 
-	Parser parser;
-	Parser_Init(&parser);
+	Parser parser = Parser_New();
 	Parser_Parse(&parser, filename);
 
 	try {
@@ -67,7 +66,7 @@ int main(int argc, char *argv[]) {
 				continue;
 			}
 
-			Chapter *ch = New(Chapter);
+			Chapter *ch = Pool_Alloc(Pool_GetInstance(), sizeof(Chapter));
 
 			ch->title    = node->options;
 			ch->sections = SectionArray_New(0);
@@ -80,7 +79,7 @@ int main(int argc, char *argv[]) {
 					continue;
 				}
 
-				Section *sect = New(Section);
+				Section *sect = Pool_Alloc(Pool_GetInstance(), sizeof(Section));
 
 				sect->title = child->options;
 				sect->body  = Parser_GetBody(&parser, child->node, $(""));
@@ -100,22 +99,17 @@ int main(int argc, char *argv[]) {
 		foreach (ch, doc.chapters) {
 			foreach (sect, (*ch)->sections) {
 				Body_Destroy(&(*sect)->body);
-				Memory_Free(*sect);
+				Pool_Free(Pool_GetInstance(), *sect);
 			}
 
 			SectionArray_Free((*ch)->sections);
 			Body_Destroy(&(*ch)->body);
-			Memory_Free(*ch);
+			Pool_Free(Pool_GetInstance(), *ch);
 		}
 
 		ChapterArray_Free(doc.chapters);
 	} clean catchAny {
 		Exception_Print(e);
-
-#if Exception_SaveTrace
-		Backtrace_PrintTrace(__exc_mgr.e.trace, __exc_mgr.e.traceItems);
-#endif
-
 		excReturn ExitStatus_Failure;
 	} finally {
 		Parser_Destroy(&parser);
