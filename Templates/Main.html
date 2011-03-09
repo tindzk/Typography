@@ -32,12 +32,12 @@
 			{end}
 
 			{for $chapter in #doc->chapters}
-				<h2><a href="#{$chapter->title}" name="{$chapter->title}">{~getNumber $_chapter, #doc->chapters} {$chapter->title}</a></h2>
+				<h2><a href="#ch{~getNumber $_chapter, #doc->chapters}" name="ch{~getNumber $_chapter, #doc->chapters}">{~getNumber $_chapter, #doc->chapters} {$chapter->title}</a></h2>
 
 				{block bodyEntry &$chapter->body}
 
 				{for $section in $chapter->sections}
-					<h3>{~getNumber $_chapter, #doc->chapters}.{~getNumber $_section, $chapter->sections} {$section->title}</h3>
+					<h3><a href="#ch{~getNumber $_chapter, #doc->chapters}.{~getNumber $_section, $chapter->sections}" name="ch{~getNumber $_chapter, #doc->chapters}.{~getNumber $_section, $chapter->sections}">{~getNumber $_chapter, #doc->chapters}.{~getNumber $_section, $chapter->sections} {$section->title}</a></h3>
 
 					{block bodyEntry &$section->body}
 				{end}
