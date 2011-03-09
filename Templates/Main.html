@@ -3,20 +3,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 	<head>
 		<title>{#doc->title}</title>
+		{if #doc->author.len != 0}
+			<meta name="author" content="{#doc->author}" />
+		{end}
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link href="{#base}/style.css" rel="stylesheet" type="text/css" />
 	</head>
 
 	<body>
 		<div id="book">
-			<h1>{#doc->title}</h1>
+			<h1 class="title">{#doc->title}</h1>
 
-			<h2><a href="#toc" name="toc">Table of Contents</a></h2>
-			<ol>
-				{for $chapter in #doc->chapters}
-					<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
-				{end}
-			</ol>
+			{if #doc->subtitle.len != 0}
+				<h1 class="subtitle">{#doc->subtitle}</h1>
+			{end}
+
+			{if #doc->author.len != 0}
+				<h2 class="author">{#doc->author}</h2>
+			{end}
+
+			{if #doc->toc.len != 0}
+				<h2><a href="#toc" name="toc">{#doc->toc}</a></h2>
+				<ol>
+					{for $chapter in #doc->chapters}
+						<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
+					{end}
+				</ol>
+			{end}
 
 			{for $chapter in #doc->chapters}
 				<h2><a href="#{$chapter->title}" name="{$chapter->title}">{~getNumber $_chapter, #doc->chapters} {$chapter->title}</a></h2>

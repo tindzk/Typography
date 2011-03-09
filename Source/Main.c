@@ -56,7 +56,10 @@ int main(int argc, char *argv[]) {
 	try {
 		Document doc = {
 			.chapters = ChapterArray_New(0),
-			.title    = Parser_GetMeta(&parser, $("title"))
+			.title    = Parser_GetMeta(&parser, $("title")),
+			.subtitle = Parser_GetMeta(&parser, $("subtitle")),
+			.author   = Parser_GetMeta(&parser, $("author")),
+			.toc      = Parser_GetMeta(&parser, $("toc"))
 		};
 
 		Parser_Nodes *nodes = Parser_GetNodes(&parser, Parser_GetRoot(&parser));

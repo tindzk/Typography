@@ -1,5 +1,7 @@
 .meta {
 	.title{docsgen}
+	.subtitle{An Introduction into docsgen}
+	.author{Tim Nieradzik}
 }
 
 .chapter[Introduction] {

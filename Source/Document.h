@@ -5,5 +5,8 @@
 
 record(Document) {
 	ProtString   title;
+	ProtString   subtitle;
+	ProtString   author;
+	ProtString   toc;
 	ChapterArray *chapters;
 };
