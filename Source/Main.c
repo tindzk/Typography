@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		ChapterArray_Free(doc.chapters);
-	} clean catchAny {
+	} catchAny {
 		Exception_Print(e);
 		excReturn ExitStatus_Failure;
 	} finally {
