@@ -26,7 +26,7 @@
 				<h2><a href="#toc" name="toc">{#doc->toc}</a></h2>
 				<ol>
 					{for $chapter in #doc->chapters}
-						<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
+						<li><a href="#ch{~getNumber $_chapter, #doc->chapters}">{$chapter->title}</a><br /></li>
 					{end}
 				</ol>
 			{end}
