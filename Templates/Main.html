@@ -42,6 +42,19 @@
 					{block bodyEntry &$section->body}
 				{end}
 			{end}
+
+			{if #doc->footnotes->len != 0}
+				<div class="footnotes">
+					<ol>
+						{for $footnote in #doc->footnotes}
+							<li id="fn{~getNumber $_footnote, #doc->footnotes}">
+								{block bodyEntry $footnote}
+								<a class="arrow" href="#fnref{~getNumber $_footnote, #doc->footnotes}">&uarr;</a>
+							</li>
+						{end}
+					</ol>
+				</div>
+			{end}
 		</div>
 	</body>
 </html>

@@ -9,4 +9,5 @@ record(Document) {
 	ProtString   author;
 	ProtString   toc;
 	ChapterArray *chapters;
+	BodyArray    *footnotes;
 };
