@@ -12,19 +12,19 @@
 			<h1>{#doc->title}</h1>
 
 			<h2><a href="#toc" name="toc">Table of Contents</a></h2>
-			<ul>
+			<ol>
 				{for $chapter in #doc->chapters}
 					<li><a href="#{$chapter->title}">{$chapter->title}</a><br /></li>
 				{end}
-			</ul>
+			</ol>
 
 			{for $chapter in #doc->chapters}
-				<h2><a href="#{$chapter->title}" name="{$chapter->title}">{$chapter->title}</a></h2>
+				<h2><a href="#{$chapter->title}" name="{$chapter->title}">{~getNumber $_chapter, #doc->chapters} {$chapter->title}</a></h2>
 
 				{block bodyEntry &$chapter->body}
 
 				{for $section in $chapter->sections}
-					<h3>{$section->title}</h3>
+					<h3>{~getNumber $_chapter, #doc->chapters}.{~getNumber $_section, $chapter->sections} {$section->title}</h3>
 
 					{block bodyEntry &$section->body}
 				{end}
