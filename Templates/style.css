@@ -53,7 +53,8 @@ h2 {
 
 #book h2.author {
 	text-align: center;
-	font-size: 24px;
+	font-size: 22px;
+	color: #002F72;
 }
 
 #book .footnotes {
@@ -81,6 +82,21 @@ h2 {
 	margin-left: 0.5em;
 	font-size: 120%;
 	font-weight: bold;
+}
+
+#book .caption {
+	text-align: center;
+	font-size: 14px;
+}
+
+#book .figure {
+	margin-left: 2em;
+	margin-right: 2em;
+	margin-bottom: 1em;
+}
+
+#book .figure img {
+	border: 1px solid #666;
 }
 
 h3 {
