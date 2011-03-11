@@ -182,7 +182,7 @@ p {
 	line-height: 12px;
 	background-color: #F5FCF5;
 	padding: 1em 1em 1em 1em;
-	font-family: Monaco, Terminus, "Lucida Console", Monospace;
+	font-family: Monaco, Terminus, Monospace, "Lucida Console", "Trebuchet MS";
 	font-size: 10px;
 	color: #554;
 }
