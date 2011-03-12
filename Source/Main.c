@@ -63,6 +63,10 @@ int main(int argc, char *argv[]) {
 			.footnotes = Parser_GetFootnotes(&parser)
 		};
 
+		if (doc.title.len == 0) {
+			doc.title = filename;
+		}
+
 		Parser_Nodes *nodes = Parser_GetNodes(&parser, Parser_GetRoot(&parser));
 
 		foreach (node, nodes) {
