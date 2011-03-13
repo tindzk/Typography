@@ -38,7 +38,7 @@ def(void, Parse, RdString base, RdString filename) {
 			continue;
 		}
 
-		Chapter *ch = Pool_Alloc(Pool_GetInstance(), sizeof(Chapter));
+		Chapter *ch = Chapter_Alloc();
 
 		ch->title    = node->options;
 		ch->sections = SectionArray_New(0);
@@ -51,7 +51,7 @@ def(void, Parse, RdString base, RdString filename) {
 				continue;
 			}
 
-			Section *sect = Pool_Alloc(Pool_GetInstance(), sizeof(Section));
+			Section *sect = Section_Alloc();
 
 			sect->title = child->options;
 			sect->body  = Parser_GetBody(&parser, child->node, $(""));
@@ -71,12 +71,12 @@ def(void, Parse, RdString base, RdString filename) {
 	each(ch, doc.chapters) {
 		each(sect, (*ch)->sections) {
 			Body_Destroy(&(*sect)->body);
-			Pool_Free(Pool_GetInstance(), *sect);
+			Section_Free(*sect);
 		}
 
 		SectionArray_Free((*ch)->sections);
 		Body_Destroy(&(*ch)->body);
-		Pool_Free(Pool_GetInstance(), *ch);
+		Chapter_Free(*ch);
 	}
 
 	ChapterArray_Free(doc.chapters);

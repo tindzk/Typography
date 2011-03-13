@@ -11,4 +11,6 @@ record(Chapter) {
 	SectionArray *sections;
 };
 
+MemoryHelpers(Chapter);
+
 Array(Chapter *, ChapterArray);

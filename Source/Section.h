@@ -5,3 +5,5 @@ record(Section) {
 	RdString title;
 	Body     body;
 };
+
+MemoryHelpers(Section);
