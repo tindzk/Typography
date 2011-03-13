@@ -2,8 +2,8 @@
 #import <docslib/TemplateHelper.h>
 
 tpl(Main) {
-	Document   *doc;
-	ProtString base;
+	Document *doc;
+	RdString base;
 };
 
 #define getNumber(name, arr) \

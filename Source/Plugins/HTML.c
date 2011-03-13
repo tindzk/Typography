@@ -1,12 +1,12 @@
 #import "HTML.h"
 
-void Plugins_HTML(ProtString base, Document *doc, File *file) {
+void Plugins_HTML(RdString base, Document *doc, File *file) {
 	String s = String_New(1024);
 
-	MainTemplate tpl;
-
-	tpl.doc  = doc;
-	tpl.base = base;
+	MainTemplate tpl = {
+		.doc  = doc,
+		.base = base
+	};
 
 	Template_Main(&tpl, &s);
 

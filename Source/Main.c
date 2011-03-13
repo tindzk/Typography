@@ -1,128 +1,108 @@
+#import <Main.h>
 #import <Path.h>
 #import <File.h>
-#import <Signal.h>
-#import <Terminal.h>
-#import <Exception.h>
-#import <Typography.h>
 #import <docslib/Parser.h>
 
 #import "Document.h"
 #import "Plugins/HTML.h"
 
-Logger logger;
-Terminal term;
+#define self Application
 
-void OnLogMessage(__unused void *ptr, FmtString msg, Logger_Level level, __unused String file, __unused int line) {
-	Terminal_FmtPrint(&term, $("[%] $\n"),
+/* Use our own method for printing out log messages (less verbose). */
+def(void, OnLogMessage, FmtString msg, Logger_Level level, __unused String file, __unused int line) {
+	Terminal_FmtPrint(&this->term, $("[%] $\n"),
 		Logger_ResolveLevel(level), msg);
 }
 
-int main(int argc, char *argv[]) {
-	Signal0();
-
-	term = Terminal_New(File_StdIn, File_StdOut, false);
-
-	Logger_Init(&logger, Callback(NULL, &OnLogMessage),
-		Logger_Level_Fatal |
-		Logger_Level_Crit  |
-		Logger_Level_Error |
-		Logger_Level_Warn  |
-		Logger_Level_Info  |
-		Logger_Level_Trace);
-
-	if (argc <= 1) {
-		Logger_Error(&logger, $("No parameters specified."));
-		return ExitStatus_Failure;
-	}
-
-	ProtString filename = String_FromNul(argv[1]);
-
-	if (!Path_Exists(filename)) {
-		Logger_Error(&logger, $("Path '%' does not exist."),
-			filename);
-
-		return ExitStatus_Failure;
-	}
-
-	ProtString base = $(".");
-
-	if (argc > 2) {
-		base = String_FromNul(argv[2]);
-	}
-
-	Parser parser = Parser_New();
+def(void, Parse, RdString base, RdString filename) {
+	Parser parser = Parser_New(&this->logger);
 	Parser_Parse(&parser, filename);
 
-	try {
-		Document doc = {
-			.chapters  = ChapterArray_New(0),
-			.title     = Parser_GetMeta(&parser, $("title")),
-			.subtitle  = Parser_GetMeta(&parser, $("subtitle")),
-			.author    = Parser_GetMeta(&parser, $("author")),
-			.toc       = Parser_GetMeta(&parser, $("toc")),
-			.footnotes = Parser_GetFootnotes(&parser)
-		};
+	Document doc = {
+		.chapters  = ChapterArray_New(0),
+		.title     = Parser_GetMeta(&parser, $("title")),
+		.subtitle  = Parser_GetMeta(&parser, $("subtitle")),
+		.author    = Parser_GetMeta(&parser, $("author")),
+		.toc       = Parser_GetMeta(&parser, $("toc")),
+		.footnotes = Parser_GetFootnotes(&parser)
+	};
 
-		if (doc.title.len == 0) {
-			doc.title = filename;
+	if (doc.title.len == 0) {
+		doc.title = filename;
+	}
+
+	Parser_Nodes *nodes = Parser_GetNodes(&parser, Parser_GetRoot(&parser));
+
+	each(node, nodes) {
+		if (!String_Equals(node->name, $("chapter"))) {
+			continue;
 		}
 
-		Parser_Nodes *nodes = Parser_GetNodes(&parser, Parser_GetRoot(&parser));
+		Chapter *ch = Pool_Alloc(Pool_GetInstance(), sizeof(Chapter));
 
-		foreach (node, nodes) {
-			if (!String_Equals(node->name, $("chapter"))) {
+		ch->title    = node->options;
+		ch->sections = SectionArray_New(0);
+		ch->body     = Parser_GetBody(&parser, node->node, $("section"));
+
+		Parser_Nodes *children = Parser_GetNodes(&parser, node->node);
+
+		each(child, children) {
+			if (!String_Equals(child->name, $("section"))) {
 				continue;
 			}
 
-			Chapter *ch = Pool_Alloc(Pool_GetInstance(), sizeof(Chapter));
+			Section *sect = Pool_Alloc(Pool_GetInstance(), sizeof(Section));
 
-			ch->title    = node->options;
-			ch->sections = SectionArray_New(0);
-			ch->body     = Parser_GetBody(&parser, node->node, $("section"));
+			sect->title = child->options;
+			sect->body  = Parser_GetBody(&parser, child->node, $(""));
 
-			Parser_Nodes *children = Parser_GetNodes(&parser, node->node);
-
-			foreach (child, children) {
-				if (!String_Equals(child->name, $("section"))) {
-					continue;
-				}
-
-				Section *sect = Pool_Alloc(Pool_GetInstance(), sizeof(Section));
-
-				sect->title = child->options;
-				sect->body  = Parser_GetBody(&parser, child->node, $(""));
-
-				SectionArray_Push(&ch->sections, sect);
-			}
-
-			Parser_Nodes_Free(children);
-
-			ChapterArray_Push(&doc.chapters, ch);
+			SectionArray_Push(&ch->sections, sect);
 		}
 
-		Parser_Nodes_Free(nodes);
+		Parser_Nodes_Free(children);
 
-		Plugins_HTML(base, &doc, File_StdOut);
+		ChapterArray_Push(&doc.chapters, ch);
+	}
 
-		foreach (ch, doc.chapters) {
-			foreach (sect, (*ch)->sections) {
-				Body_Destroy(&(*sect)->body);
-				Pool_Free(Pool_GetInstance(), *sect);
-			}
+	Parser_Nodes_Free(nodes);
 
-			SectionArray_Free((*ch)->sections);
-			Body_Destroy(&(*ch)->body);
-			Pool_Free(Pool_GetInstance(), *ch);
+	Plugins_HTML(base, &doc, File_StdOut);
+
+	each(ch, doc.chapters) {
+		each(sect, (*ch)->sections) {
+			Body_Destroy(&(*sect)->body);
+			Pool_Free(Pool_GetInstance(), *sect);
 		}
 
-		ChapterArray_Free(doc.chapters);
-	} catchAny {
-		Exception_Print(e);
-		excReturn ExitStatus_Failure;
-	} finally {
-		Parser_Destroy(&parser);
-		Terminal_Destroy(&term);
-	} tryEnd;
+		SectionArray_Free((*ch)->sections);
+		Body_Destroy(&(*ch)->body);
+		Pool_Free(Pool_GetInstance(), *ch);
+	}
 
-	return ExitStatus_Success;
+	ChapterArray_Free(doc.chapters);
+
+	Parser_Destroy(&parser);
+}
+
+def(bool, Run) {
+	if (this->args->len == 0) {
+		Logger_Error(&this->logger, $("No parameters specified."));
+		return false;
+	}
+
+	RdString filename = this->args->buf[0];
+
+	if (!Path_Exists(filename)) {
+		Logger_Error(&this->logger, $("Path '%' does not exist."), filename);
+		return false;
+	}
+
+	RdString base =
+		(this->args->len > 1)
+			? this->args->buf[1]
+			: $(".");
+
+	call(Parse, base, filename);
+
+	return true;
 }

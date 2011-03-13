@@ -4,10 +4,10 @@
 #import "Chapter.h"
 
 record(Document) {
-	ProtString   title;
-	ProtString   subtitle;
-	ProtString   author;
-	ProtString   toc;
+	RdString     title;
+	RdString     subtitle;
+	RdString     author;
+	RdString     toc;
 	ChapterArray *chapters;
 	BodyArray    *footnotes;
 };

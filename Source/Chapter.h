@@ -7,7 +7,7 @@ Array(Section *, SectionArray);
 
 record(Chapter) {
 	Body         body;
-	ProtString   title;
+	RdString     title;
 	SectionArray *sections;
 };
 
