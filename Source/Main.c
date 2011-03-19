@@ -10,8 +10,15 @@
 
 /* Use our own method for printing out log messages (less verbose). */
 def(void, OnLogMessage, FmtString msg, Logger_Level level, __unused RdString file, __unused int line) {
+	Terminal_SetOutput(&this->term,
+		level == Logger_Level_Error
+			? File_StdErr
+			: File_StdOut);
+
 	Terminal_FmtPrint(&this->term, $("[%] $\n"),
 		Logger_ResolveLevel(level), msg);
+
+	Terminal_SetOutput(&this->term, File_StdOut);
 }
 
 def(void, Parse, RdString base, RdString filename) {
