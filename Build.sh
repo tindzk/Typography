@@ -10,7 +10,7 @@ mkdir -p Build/{docsgen,docslib,Jivai}
 	out=Source/Template           \
 	|| exit 1
 
-../Jivai-Utils/jutils.bin        \
+../Depend/Depend.bin             \
 	build                        \
 	output=docsgen.bin           \
 	main=Source/Main.c           \

@@ -1,6 +1,6 @@
 .meta {
 	.title{docsgen}
-	.subtitle{An Introduction into docsgen}
+	.subtitle{Document generator}
 	.author{Tim Nieradzik}
 }
 
@@ -20,13 +20,12 @@
 
 .chapter[Installation] {
 	.section[Requirements] {
-		For tplgen to compile, make sure to have these prerequisites
-		installed:
+		For tplgen to compile, make sure to have these prerequisites installed:
 
 		.list {
-			.item{Jivai}
-			.item{Jivai-Utils}
-			.item{tplgen}
+			.item{.url[../Jivai]{Jivai}}
+			.item{.url[../Depend]{Depend}}
+			.item{.url[../tplgen]{tplgen}}
 		}
 	}
 
@@ -39,7 +38,7 @@
 
 	.section[Compile] {
 		.command {
-			$ cd docsgen; ./build.sh
+			$ cd docsgen ; ./build.sh
 		}
 	}
 }
@@ -53,9 +52,7 @@
 	}
 
 	Additionally, you can specify a second parameter for the base
-	path in which the CSS file (.path{style.css}) and the
-	.url[http://alexgorbatchev.com/SyntaxHighlighter/]{syntax
-	highlighter} are stored.
+	path in which the CSS file (.path{style.css}) is stored.
 }
 
 .chapter[Commands] {
@@ -232,49 +229,17 @@
 	}
 }
 
-.chapter[License] {
-	.p {
-		Licensed under the EUPL, Version 1.1 only (the
-		.i{"Licence"}); You may not use this work except in
-		compliance with the Licence.
+.chapter[Appendix] {
+	.section[License] {
+		Licensed under the EUPL, Version 1.1 only (the .i{"Licence"}); You may not use this work except in compliance with the Licence.
 	}
 
-	.p {
-		You may obtain a copy of the Licence at:
-
-		.url[http://ec.europa.eu/idabc/eupl] {
-			http://ec.europa.eu/idabc/eupl
+	.section[See also] {
+		.list {
+			.item{.url[http://github.com/tindzk/docsgen]{Browse source}}
+			.item{.url[http://github.com/tindzk/docsgen/issues]{Bug tracker}}
+			.item{.url[http://tindzk.github.com/]{Other projects}}
+			.item{.mail[tim.nieradzik@gmx.de]{Contact}}
 		}
 	}
-
-	.p {
-		Unless required by applicable law or agreed to in writing,
-		software distributed under the Licence is distributed on an
-		"AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
-		either express or implied.
-	}
-
-	.p {
-		See the Licence for the specific language governing
-		permissions and limitations under the Licence.
-	}
-}
-
-.chapter[See also] {
-	.list {
-		.item{.url[http://github.com/tindzk/docsgen]{Browse source}}
-		.item{.url[http://github.com/tindzk]{GitHub account}}
-	}
-}
-
-.chapter[Donate] {
-	.url[http://flattr.com/thing/69450/podfm-extensible-podcast-aggregator] {
-		.image {
-			http://api.flattr.com/button/button-compact-static-100x17.png
-		}
-	}
-}
-
-.chapter[Contact] {
-	.mail[tim.nieradzik@gmx.de]{Tim Nieradzik}
 }

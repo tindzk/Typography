@@ -9,7 +9,7 @@
 #define self Application
 
 /* Use our own method for printing out log messages (less verbose). */
-def(void, OnLogMessage, FmtString msg, Logger_Level level, __unused String file, __unused int line) {
+def(void, OnLogMessage, FmtString msg, Logger_Level level, __unused RdString file, __unused int line) {
 	Terminal_FmtPrint(&this->term, $("[%] $\n"),
 		Logger_ResolveLevel(level), msg);
 }
