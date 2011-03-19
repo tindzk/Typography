@@ -1,7 +1,7 @@
 body {
 	font-family: Palatino, Georgia, serif;
 	font-size: 16px;
-	line-height: 1.5;
+	line-height: 1.5em;
 	background: #f5f5ff;
 	color: #070707;
 	background: #fff;
@@ -29,14 +29,18 @@ a img {
 h1 {
 	color: #002F72;
 	font-size: 3em;
-	line-height: 1;
+	line-height: 0.75em;
 }
 
 h2 {
-	font-size: 180%;
 	font-size: 2em;
-	margin-top: 1.15em;
-	margin-bottom: 0.25em;
+	margin-top: 1.25em;
+	margin-bottom: 0.5em;
+}
+
+h3 {
+	font-size: 1.5em;
+	line-height: 1em;
 }
 
 /* Parts taken from http://tauday.com/stylesheets/polytexnic.css */
@@ -99,11 +103,6 @@ h2 {
 	border: 1px solid #666;
 }
 
-h3 {
-	font-size: 1.5em;
-	line-height: 1;
-}
-
 a {
 	color: #002F72;
 	text-decoration: none;
@@ -114,7 +113,6 @@ a:hover {
 }
 
 p {
-	margin: 0 0 15px 0;
 	text-align: justify;
 }
 
