@@ -49,7 +49,7 @@
 						{for $footnote in #doc->footnotes}
 							<li id="fn{~getNumber $_footnote, #doc->footnotes}">
 								{block bodyEntry $footnote}
-								<a class="arrow" href="#fnref{~getNumber $_footnote, #doc->footnotes}">&uarr;</a>
+								<a class="arrow" href="#fnref{~getNumber $_footnote, #doc->footnotes}">&#8617;</a>
 							</li>
 						{end}
 					</ol>
