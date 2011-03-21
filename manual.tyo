@@ -5,17 +5,9 @@
 }
 
 .chapter[Introduction] {
-	.p {
-		.i{docsgen} is a frontend for the
-		.url[http://github.com/tindzk/Jivai/blob/master/src/Typography.c]{Typography}
-		markup.
-	}
+	.i{docsgen} is a frontend for the .url[http://github.com/tindzk/Jivai/blob/master/src/Typography.c]{Typography} markup.
 
-	.p {
-		Its purpose is to create well-formatted documents without much
-		effort. Therefore, docsgen offers various features which
-		facilitate styling and structuring texts.
-	}
+	Its purpose is to create well-formatted documents without much effort. Therefore, docsgen offers various features which facilitate styling and structuring texts.
 }
 
 .chapter[Installation] {
@@ -44,35 +36,23 @@
 }
 
 .chapter[Usage] {
-	docsgen requires at least one parameter which is the path to the
-	document. To generate this manual, run:
+	docsgen requires at least one parameter which is the path to the document. To generate this manual, run:
 
 	.command {
 		$ ./docsgen.bin manual.tyo
 	}
 
-	Additionally, you can specify a second parameter for the base
-	path in which the CSS file (.path{style.css}) is stored.
+	Additionally, you can specify a second parameter for the base path in which the CSS file (.path{style.css}) is stored.
 }
 
 .chapter[Commands] {
-	.p {
-		A document written in Typography is basically a sequence of
-		(nested) commands surrounded by text. Commands are
-		comparable to functions in programming languages. Hence,
-		some commands may even accept options.
-	}
+	A document written in Typography is basically a sequence of (nested) commands surrounded by text. Commands are comparable to functions in programming languages. Hence, some commands may even accept options.
 
-	.p {
-		A typical command is used like this: .keyword{.cmd\{value\}}.
-		Parameters are generally optional. They can be specified
-		using square brackets: .keyword{.cmd\[param\]\{value\}}.
-	}
+	A typical command is used like this: .keyword{.cmd\{value\}}. Parameters are generally optional. They can be specified using square brackets: .keyword{.cmd\[param\]\{value\}}.
 
 	.section[Meta] {
 		.anchor{meta}
-		.keyword{meta} is a top-level command, i.e. it cannot be
-		used within other blocks.
+		.keyword{meta} is a top-level command, i.e. it cannot be used within other blocks.
 
 		It allows to specify the document's title:
 
@@ -84,18 +64,14 @@
 	}
 
 	.section[Chapters and Sections] {
-		Like .jump{meta}, .keyword{chapter} is another top-level
-		command.
+		Like .jump[meta]{meta}, .keyword{chapter} is another top-level command.
 
-		Chapter are automatically added to the table of contents.
-		Sometimes it's desired to subdivide the contents of a
-		chapter. Therefore, chapters may also contain sections
-		(.keyword{.section\{...\}}). However, the generated table of
-		contents won't cover any links to sections.
+		Chapters are automatically added to the table of contents. Sometimes it's desired to subdivide the contents of a chapter. Therefore, chapters may also contain sections (.keyword{.section\{...\}}). However, the generated table of contents won't cover any links to sections.
 	}
 
 	.section[Style] {
 		The following styles are supported:
+
 		.list {
 			.item{b (.b{bold})}
 			.item{i (.i{italic})}
@@ -109,14 +85,11 @@
 			.item{number (.number{8080})}
 		}
 
-		Styles only format the given text, i.e. they don't require any
-		options.
+		Styles only format the given text, i.e. they don't require any options.
 	}
 
 	.section[Blocks] {
-		docsgen supports .keyword{blocks}. Their purpose is to
-		inline texts. Notes (.keyword{note}) and warnings
-		(.keyword{warning}) are supported:
+		docsgen supports .keyword{blocks}. Their purpose is to inline texts. Notes (.keyword{note}) and warnings (.keyword{warning}) are supported:
 
 		.note {
 			Note block
@@ -128,9 +101,7 @@
 	}
 
 	.section[Lists] {
-		A list is initialized using the .keyword{list} command.
-		Within a list, there cannot be other elements than
-		.keyword{item}s:
+		A list is initialized using the .keyword{list} command. Within a list, there cannot be other elements than .keyword{item}s:
 
 		.code {
 			.list \{
@@ -141,9 +112,11 @@
 	}
 
 	.section[Paragraphs] {
-		docsgen does not detect paragraphs automatically. To force a
-		paragraph, the corresponding text needs to be surrounded by
-		a .keyword{p} command.
+		docsgen does not detect paragraphs automatically. To force a paragraph, the corresponding text needs to be surrounded by a .keyword{p} command.
+	}
+
+	.section[Footnotes] {
+		To define a footnote.footnote{This is a footnote.}, use the .keyword{footnote} command.
 	}
 
 	.section[Syntax highlighting] {
@@ -182,15 +155,12 @@
 	}
 
 	.section[Anchors] {
-		Anchors are invisible markers which can be set throughout
-		the whole document and jumped to.
+		Anchors are invisible markers which can be set throughout the whole document and jumped to.
 
-		An anchor needs to be initialized using the .keyword{anchor}
-		command.
+		An anchor needs to be initialized using the .keyword{anchor} command.
 
 		.anchor{jump}
-		A link pointing to an anchor can be generated using
-		.keyword{jump}.
+		A link pointing to an anchor can be generated using .keyword{jump}.
 	}
 
 	.section[Links] {
@@ -202,6 +172,7 @@
 		}
 
 		The usage of a link is similar to an .jump[jump]{anchor jumpers'}:
+
 		.code {
 			.url\[http://www.google.com/]{Google\}
 			.url\[john@example.com]{John Smith\}

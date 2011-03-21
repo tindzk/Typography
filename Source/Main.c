@@ -23,6 +23,7 @@ def(void, OnLogMessage, FmtString msg, Logger_Level level, __unused RdString fil
 
 def(void, Parse, RdString base, RdString filename) {
 	Parser parser = Parser_New(&this->logger);
+	Parser_SetAutoDetectParagraphs(&parser, true);
 	Parser_Parse(&parser, filename);
 
 	Document doc = {
@@ -49,7 +50,7 @@ def(void, Parse, RdString base, RdString filename) {
 
 		ch->title    = node->options;
 		ch->sections = SectionArray_New(0);
-		ch->body     = Parser_GetBody(&parser, node->node, $("section"));
+		ch->body     = Parser_GetBody(&parser, node->node);
 
 		Parser_Nodes *children = Parser_GetNodes(&parser, node->node);
 
@@ -61,7 +62,7 @@ def(void, Parse, RdString base, RdString filename) {
 			Section *sect = Section_Alloc();
 
 			sect->title = child->options;
-			sect->body  = Parser_GetBody(&parser, child->node, $(""));
+			sect->body  = Parser_GetBody(&parser, child->node);
 
 			SectionArray_Push(&ch->sections, sect);
 		}
