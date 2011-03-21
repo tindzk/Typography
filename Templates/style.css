@@ -67,11 +67,6 @@ h3 {
 	font-size: 90%;
 }
 
-#book sup.footnote {
-	font-size: 75%;
-	margin-right: 5px;
-}
-
 #book sup.footnote a {
 	text-decoration: none;
 }
