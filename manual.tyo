@@ -12,7 +12,7 @@
 
 .chapter[Installation] {
 	.section[Requirements] {
-		For tplgen to compile, make sure to have these prerequisites installed:
+		For docsgen to compile, make sure to have these prerequisites installed:
 
 		.list {
 			.item{.url[../Jivai]{Jivai}}
@@ -23,14 +23,14 @@
 
 	.section[Checkout] {
 		.command {
-			$ git clone git://github.com/docsgen/docslib.git
-			$ git clone git://github.com/docsgen/docsgen.git
+			$ git clone git://github.com/tindzk/docslib.git
+			$ git clone git://github.com/tindzk/docsgen.git
 		}
 	}
 
 	.section[Compile] {
 		.command {
-			$ cd docsgen ; ./build.sh
+			$ cd docsgen ; ./Build.sh
 		}
 	}
 }
