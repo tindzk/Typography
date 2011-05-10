@@ -8,6 +8,17 @@
 		{end}
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link href="{#base}/style.css" rel="stylesheet" type="text/css" />
+		{if #doc->math}
+			<script type="text/x-mathjax-config">
+				MathJax.Hub.Config(\{
+					tex2jax: \{
+						inlineMath: \[ \['$','$'], \['\\\\(','\\\\)'] ],
+						processEscapes: true
+					}
+				});
+			</script>
+			<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+		{end}
 	</head>
 
 	<body>

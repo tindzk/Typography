@@ -3,14 +3,20 @@
 
 #import "Section.h"
 
+#define self Chapter
+
 Array(Section *, SectionArray);
 
-record(Chapter) {
+class {
 	Body         body;
 	RdString     title;
 	SectionArray *sections;
 };
 
-MemoryHelpers(Chapter);
-
 Array(Chapter *, ChapterArray);
+
+rsdef(self *, New, RdString title);
+def(void, Destroy);
+def(void, SetBody, Body body);
+
+#undef self

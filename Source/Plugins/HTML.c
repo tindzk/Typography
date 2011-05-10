@@ -1,6 +1,6 @@
 #import "HTML.h"
 
-void Plugins_HTML(RdString base, Document *doc, File *file) {
+void Plugins_HTML(RdString base, Document *doc, Channel *ch) {
 	String s = String_New(1024);
 
 	MainTemplate tpl = {
@@ -11,7 +11,7 @@ void Plugins_HTML(RdString base, Document *doc, File *file) {
 	Template_Main(&tpl, &s);
 
 	for (size_t total = 0; total < s.len; ) {
-		size_t written = File_Write(file,
+		size_t written = Channel_Write(ch,
 			s.buf + total,
 			s.len - total);
 

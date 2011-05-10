@@ -8,6 +8,8 @@ record(Document) {
 	RdString     subtitle;
 	RdString     author;
 	RdString     toc;
+	bool         math;
 	ChapterArray *chapters;
+	SectionArray *sections;
 	BodyArray    *footnotes;
 };
