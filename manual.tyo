@@ -1,18 +1,18 @@
 .meta {
-	.title{docsgen}
+	.title{Typography}
 	.subtitle{Document generator}
 	.author{Tim Nieradzik}
 }
 
 .chapter[Introduction] {
-	.i{docsgen} is a frontend for the .url[http://github.com/tindzk/Jivai/blob/master/src/Typography.c]{Typography} markup.
+	.i{Typography} is a frontend for the .url[http://github.com/tindzk/Jivai/blob/master/src/Ecriture.c]{Ecriture markup}.
 
-	Its purpose is to create well-formatted documents without much effort. Therefore, docsgen offers various features which facilitate styling and structuring texts.
+	Its purpose is to create well-formatted documents without much effort. Therefore, Typography offers various features which facilitate styling and structuring texts.
 }
 
 .chapter[Installation] {
 	.section[Requirements] {
-		For docsgen to compile, make sure to have these prerequisites installed:
+		For Typography to compile, make sure to have these prerequisites installed:
 
 		.list {
 			.item{.url[../Jivai]{Jivai}}
@@ -23,23 +23,22 @@
 
 	.section[Checkout] {
 		.command {
-			$ git clone git://github.com/tindzk/docslib.git
-			$ git clone git://github.com/tindzk/docsgen.git
+			$ git clone git://github.com/tindzk/Typography.git
 		}
 	}
 
 	.section[Compile] {
 		.command {
-			$ cd docsgen ; ./Build.sh
+			$ cd Typography ; ./Build.sh
 		}
 	}
 }
 
 .chapter[Usage] {
-	docsgen requires at least one parameter which is the path to the document. To generate this manual, run:
+	Typography requires at least one parameter which is the path to the document. To generate this manual, run:
 
 	.command {
-		$ ./docsgen.bin manual.tyo
+		$ ./Typography.bin manual.tyo
 	}
 
 	Additionally, you can specify a second parameter for the base path in which the CSS file (.path{style.css}) is stored.
@@ -80,7 +79,7 @@
 			.item{var (.var{var})}
 			.item{macro (.macro{macro})}
 			.item{term (.term{1 + 2})}
-			.item{keyword (.keyword{docsgen})}
+			.item{keyword (.keyword{Typography})}
 			.item{path (.path{/root})}
 			.item{number (.number{8080})}
 		}
@@ -89,7 +88,7 @@
 	}
 
 	.section[Blocks] {
-		docsgen supports .keyword{blocks}. Their purpose is to inline texts. Notes (.keyword{note}) and warnings (.keyword{warning}) are supported:
+		Typography supports .keyword{blocks}. Their purpose is to inline texts. Notes (.keyword{note}) and warnings (.keyword{warning}) are supported:
 
 		.note {
 			Note block
@@ -112,7 +111,7 @@
 	}
 
 	.section[Paragraphs] {
-		docsgen does not detect paragraphs automatically. To force a paragraph, the corresponding text needs to be surrounded by a .keyword{p} command.
+		Typography does not detect paragraphs automatically. To force a paragraph, the corresponding text needs to be surrounded by a .keyword{p} command.
 	}
 
 	.section[Footnotes] {
@@ -120,7 +119,7 @@
 	}
 
 	.section[Syntax highlighting] {
-		docsgen supports highlighting of code and shell commands:
+		Typography supports highlighting of code and shell commands:
 
 		.list {
 			.item{command: Shell command(s)}
@@ -207,8 +206,8 @@
 
 	.section[See also] {
 		.list {
-			.item{.url[http://github.com/tindzk/docsgen]{Browse source}}
-			.item{.url[http://github.com/tindzk/docsgen/issues]{Bug tracker}}
+			.item{.url[http://github.com/tindzk/Typography]{Browse source}}
+			.item{.url[http://github.com/tindzk/Typography/issues]{Bug tracker}}
 			.item{.url[http://tindzk.github.com/]{Other projects}}
 			.item{.mail[tim.nieradzik@gmx.de]{Contact}}
 		}
