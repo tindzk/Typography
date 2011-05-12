@@ -1,5 +1,5 @@
 #import <Logger.h>
-#import <docslib/Parser.h>
+#import <Domain/Parser.h>
 
 #import "Document.h"
 #import "Plugins/HTML.h"

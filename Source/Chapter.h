@@ -1,5 +1,5 @@
 #import <String.h>
-#import <docslib/Body.h>
+#import <Domain/Body.h>
 
 #import "Section.h"
 

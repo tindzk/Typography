@@ -1,5 +1,5 @@
 #import "Document.h"
-#import <docslib/TemplateHelper.h>
+#import <Domain/TemplateHelper.h>
 
 tpl(Main) {
 	Document *doc;
