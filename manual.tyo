@@ -61,7 +61,11 @@ author: Tim Nieradzik
 		$ ./Typography.bin manual.tyo
 	}
 
+	This prints the HTML output to .i{stdout}.
+
 	Additionally, you can specify a second parameter for the base path in which the CSS file (.path{style.css}) is stored.
+
+	Typography documents must have the extension .path{.tyo}.
 }
 
 .chapter[Your First Document] {
@@ -137,12 +141,12 @@ author: Tim Nieradzik
 	.section[Lists] {
 		A list is initialized using the .keyword{list} command. Within a list, there cannot be other elements than .keyword{item}s:
 
-		.code {
-			.list \{
-				.item\{Item 1\}
-				.item\{Item 2\}
-			\}
-		}
+		.code {{
+			.list {
+				.item{Item 1}
+				.item{Item 2}
+			}
+		}}
 	}
 
 	.section[Paragraphs] {
@@ -153,27 +157,27 @@ author: Tim Nieradzik
 		To define a footnote.footnote{This is a footnote.}, use the .keyword{footnote} command.
 	}
 
-	.section[Syntax highlighting] {
-		Typography supports highlighting of code and shell commands:
+	.section[Code] {
+		Typography offers code and shell blocks which preserve indenting:
 
 		.list {
+			.item{code: Programming code}
 			.item{command: Shell command(s)}
-			.item{code: C, C++ code}
 		}
 
 		For example, this
 
-		.code {
-			.command \{
+		.code {{
+			.command {
 				$ ls -lah
-			\}
+			}
 
-			.code \{
-				int main(void) \{
+			.code {{
+				int main(void) {
 					return EXIT_SUCCESS;
-				\}
-			\}
-		}
+				}
+			\}}
+		}}
 
 		will render to:
 
@@ -181,11 +185,11 @@ author: Tim Nieradzik
 			$ ls -lah
 		}
 
-		.code {
-			int main(void) \{
+		.code {{
+			int main(void) {
 				return EXIT_SUCCESS;
-			\}
-		}
+			}
+		}}
 	}
 
 	.section[Anchors] {
@@ -207,10 +211,10 @@ author: Tim Nieradzik
 
 		The usage of a link is similar to an .jump[jump]{anchor jumpers'}:
 
-		.code {
-			.url\[http://www.google.com/]{Google\}
-			.url\[john@example.com]{John Smith\}
-		}
+		.code {{
+			.url[http://www.google.com/]{Google}
+			.url[john@example.com]{John Smith}
+		}}
 	}
 }
 
