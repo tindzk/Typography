@@ -1,10 +1,11 @@
 #import <File.h>
+#import <Path.h>
+#import <YAML.h>
 #import <String.h>
 #import <Logger.h>
 #import <Integer.h>
 #import <Ecriture.h>
-#import <FileStream.h>
-#import <BufferedStream.h>
+#import <StringStream.h>
 
 #import "Body.h"
 
@@ -24,7 +25,8 @@ record(ref(Handler)) {
 };
 
 class {
-	Ecriture tyo;
+	Ecriture   ecr;
+	YAML       yml;
 	Logger     *logger;
 	BodyArray  *footnotes;
 	bool       autoDetectParagraphs;

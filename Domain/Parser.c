@@ -49,14 +49,16 @@ static sdef(Body_BlockType, ResolveBlock, RdString name) {
 
 rsdef(self, New, Logger *logger) {
 	return (self) {
-		.tyo       = Ecriture_New(),
+		.ecr       = Ecriture_New(),
+		.yml       = YAML_New(4),
 		.logger    = logger,
 		.footnotes = BodyArray_New(1024)
 	};
 }
 
 def(void, Destroy) {
-	Ecriture_Destroy(&this->tyo);
+	Ecriture_Destroy(&this->ecr);
+	YAML_Destroy(&this->yml);
 
 	BodyArray_Destroy(this->footnotes);
 	BodyArray_Free(this->footnotes);
@@ -71,19 +73,39 @@ def(BodyArray *, GetFootnotes) {
 }
 
 def(Ecriture_Node *, GetRoot) {
-	return Ecriture_GetRoot(&this->tyo);
+	return Ecriture_GetRoot(&this->ecr);
 }
 
 def(void, Parse, RdString path) {
-	File file = File_New(path, FileStatus_ReadOnly);
+	String s = String_New((size_t) Path_GetSize(path));
+	File_GetContents(path, &s);
 
-	BufferedStream stream = BufferedStream_New(File_AsStream(&file));
-	BufferedStream_SetInputBuffer(&stream, 1024, 128);
+	RdString header, body;
 
-	Ecriture_Parse(&this->tyo, BufferedStream_AsStream(&stream));
+	if (!String_Parse($("%\n\n%"), s.rd, &header, &body)) {
+		goto error;
+	}
 
-	BufferedStream_Close(&stream);
-	BufferedStream_Destroy(&stream);
+	header = String_Trim(header);
+	body   = String_Trim(body);
+
+	if (header.len == 0 || body.len == 0) {
+		goto error;
+	}
+
+	when (error) {
+		Logger_Error(this->logger, $("Header or body missing."));
+		String_Destroy(&s);
+		return;
+	}
+
+	StringStream headerStream = StringStream_New(&header);
+	StringStream bodyStream   = StringStream_New(&body);
+
+	YAML_Parse(&this->yml,     StringStream_AsStream(&headerStream));
+	Ecriture_Parse(&this->ecr, StringStream_AsStream(&bodyStream));
+
+	String_Destroy(&s);
 }
 
 static def(RdString, GetValue, Ecriture_Node *node) {
@@ -511,29 +533,15 @@ static def(void, ParseText, Body *body, Ecriture_Node *node, ref(Handler) *handl
 	}
 }
 
-static def(RdString, GetMetaValue, RdString name, Ecriture_Node *node) {
-	fwd(i, node->len) {
-		Ecriture_Node *child = node->buf[i];
-
-		if (child->type == Ecriture_NodeType_Item) {
-			if (String_Equals(Ecriture_Item_GetName(child), name)) {
-				return call(GetValue, child);
-			}
-		}
-	}
-
-	return $("");
-}
-
 def(RdString, GetMeta, RdString name) {
-	Ecriture_Node *node = Ecriture_GetRoot(&this->tyo);
+	YAML_Node *node = YAML_GetRoot(&this->yml);
 
 	fwd(i, node->len) {
-		Ecriture_Node *child = node->buf[i];
+		YAML_Node *child = node->buf[i];
 
-		if (child->type == Ecriture_NodeType_Item) {
-			if (String_Equals(Ecriture_Item_GetName(child), $("meta"))) {
-				return call(GetMetaValue, name, child);
+		if (child->type == YAML_NodeType_Item) {
+			if (String_Equals(YAML_Item_GetKey(child), name)) {
+				return YAML_Item_GetValue(child);
 			}
 		}
 	}
@@ -544,26 +552,23 @@ def(RdString, GetMeta, RdString name) {
 def(RdStringArray *, GetMultiMeta, RdString name) {
 	RdStringArray *res = RdStringArray_New(0);
 
-	Ecriture_Node *node = Ecriture_GetRoot(&this->tyo);
+	YAML_Node *node = YAML_GetRoot(&this->yml);
 
 	fwd(i, node->len) {
-		Ecriture_Node *child = node->buf[i];
+		YAML_Node *child = node->buf[i];
 
-		if (child->type == Ecriture_NodeType_Item) {
-			if (String_Equals(Ecriture_Item_GetName(child), $("meta"))) {
+		if (child->type == YAML_NodeType_Section) {
+			if (String_Equals(YAML_Section_GetName(child), name)) {
 				fwd(j, child->len) {
-					Ecriture_Node *child2 = child->buf[j];
+					YAML_Node *child2 = child->buf[j];
 
-					if (child2->type == Ecriture_NodeType_Item) {
-						if (String_Equals(Ecriture_Item_GetName(child2), name)) {
-							RdStringArray_Push(&res,
-								call(GetValue, child2));
-						}
+					if (child2->type == YAML_NodeType_Item) {
+						RdStringArray_Push(&res, YAML_Item_GetValue(child2));
 					}
 				}
-
-				break;
 			}
+
+			break;
 		}
 	}
 
@@ -610,7 +615,7 @@ def(Body, ProcessBody, Ecriture_Node *node, ref(Handler) *handlers) {
 }
 
 def(ref(Node), GetNodeByName, RdString name) {
-	Ecriture_Node *node = Ecriture_GetRoot(&this->tyo);
+	Ecriture_Node *node = Ecriture_GetRoot(&this->ecr);
 
 	fwd(i, node->len) {
 		Ecriture_Node *child = node->buf[i];

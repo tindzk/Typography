@@ -1,13 +1,13 @@
-.meta {
-	.title{Typography}
-	.subtitle{Document generator}
-	.author{Tim Nieradzik}
-}
+title: Typography
+subtitle: Document generator
+author: Tim Nieradzik
 
 .chapter[Introduction] {
 	.i{Typography} is a frontend for the .url[http://github.com/tindzk/Jivai/blob/master/src/Ecriture.c]{Ecriture markup}.
 
 	Its purpose is to create well-formatted documents without much effort. Therefore, Typography offers various features which facilitate styling and structuring texts.
+
+	Although Typography ships a console frontend, you can still use Typography in your own projects. As the source code is separated into a library and an application part, the code base is ready to be used externally. For instance, .url[../blogd]{blogd} already uses Typography for rendering its blog articles.
 }
 
 .chapter[Installation] {
@@ -34,6 +34,26 @@
 	}
 }
 
+.chapter[Document Structure] {
+	Like in mails and HTTP requests, a document consists of two parts: a header and a body. This allows better separation between meta information like title, author etc. and actual contents.
+
+	As the header is written in the YAML markup, nesting is possible, too. By default, Typography does not make use of this feature though.
+
+	The body is written in the Ecriture markup which is more suitable for text as inline commands can be used whereas YAML is line-oriented.
+
+	An imaginary example for illustrating the structure is:
+
+	.code {{
+		meta1: value
+		meta2: value
+		meta3: value
+
+		This is a .command{command's value}.
+	}}
+
+	Header and body must be separated by an empty line. Headers cannot be set or overwritten in the body.
+}
+
 .chapter[Usage] {
 	Typography requires at least one parameter which is the path to the document. To generate this manual, run:
 
@@ -44,26 +64,41 @@
 	Additionally, you can specify a second parameter for the base path in which the CSS file (.path{style.css}) is stored.
 }
 
+.chapter[Your First Document] {
+	To get familiar with Typography, here's a simple document:
+
+	.code {{
+		title: Document Title
+		author: Author
+		toc: Table of Contents
+
+		.chapter[Chapter name] {
+			Chapter description
+
+			.section[Section name] {
+				Section contents.
+			}
+
+			.section[Second Section] {
+				First paragraph.
+
+				Second paragraph.
+			}
+		}
+	}}
+
+	.keyword{toc} sets the name for the table of contents. The value is not hard-coded as Typography aims to be language agnostic. If you don't set .keyword{toc}, the table of contents is left away.
+
+	The Typography console client already comes with automatic paragraph detection. This feature can be disabled in the library mode though.
+}
+
 .chapter[Commands] {
 	A document written in Typography is basically a sequence of (nested) commands surrounded by text. Commands are comparable to functions in programming languages. Hence, some commands may even accept options.
 
 	A typical command is used like this: .keyword{.cmd\{value\}}. Parameters are generally optional. They can be specified using square brackets: .keyword{.cmd\[param\]\{value\}}.
 
-	.section[Meta] {
-		.anchor{meta}
-		.keyword{meta} is a top-level command, i.e. it cannot be used within other blocks.
-
-		It allows to specify the document's title:
-
-		.code {
-			.meta \{
-				.title\{Document Title\}
-			\}
-		}
-	}
-
 	.section[Chapters and Sections] {
-		Like .jump[meta]{meta}, .keyword{chapter} is another top-level command.
+		.keyword{chapter} is a top-level command, i.e. it cannot be used within other blocks.
 
 		Chapters are automatically added to the table of contents. Sometimes it's desired to subdivide the contents of a chapter. Therefore, chapters may also contain sections (.keyword{.section\{...\}}). However, the generated table of contents won't cover any links to sections.
 	}
@@ -176,26 +211,6 @@
 			.url\[http://www.google.com/]{Google\}
 			.url\[john@example.com]{John Smith\}
 		}
-	}
-}
-
-.chapter[Example] {
-	A sample document may look like:
-
-	.code {
-		.meta \{
-			.title\{Sample Document\}
-		\}
-
-		.chapter\{First Chapter\} \{
-			...
-		\}
-
-		.chapter\{Second Chapter\} \{
-			.section\{Section\} \{
-				...
-			\}
-		\}
 	}
 }
 
