@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir -p Build/{docsgen,Domain,Jivai}
+mkdir -p Build/{Typography,Domain,Jivai}
 
 ../tplgen/tplgen.bin             \
 	name=Template                \
@@ -12,14 +12,14 @@ mkdir -p Build/{docsgen,Domain,Jivai}
 
 ../Depend/Depend.bin             \
 	build                        \
-	output=docsgen.bin           \
+	output=Typography.bin        \
 	main=Source/Main.c           \
 	manifest=Manifest.h          \
 	include=.                    \
 	include=..                   \
 	include=../Jivai/src         \
 	include=../tplgen/Include    \
-	map=Source:Build/docsgen     \
+	map=Source:Build/Typography  \
 	map=../Jivai/src:Build/Jivai \
 	map=Domain:Build/Domain      \
 	optimlevel=0                 \
