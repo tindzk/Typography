@@ -28,7 +28,7 @@ def(bool, Run) {
 	RdString filename = this->args->buf[0];
 
 	if (!Path_Exists(filename)) {
-		Logger_Error(&this->logger, $("Path '%' does not exist."), filename);
+		Logger_Error(&this->logger, $("File '%' does not exist."), filename);
 		return false;
 	}
 
