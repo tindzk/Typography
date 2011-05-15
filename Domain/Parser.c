@@ -101,6 +101,13 @@ def(void, Parse, RdString path) {
 		return;
 	}
 
+	this->ofsLine = $("\n\n").len;
+	fwd(i, header.len) {
+		if (header.buf[i] == '\n'){
+			this->ofsLine++;
+		}
+	}
+
 	StringStream headerStream = StringStream_New(RdString_Exalt(header));
 	YAML_Parse(&this->yml, StringStream_AsStream(&headerStream));
 
@@ -112,7 +119,7 @@ def(void, Parse, RdString path) {
 
 static def(RdString, GetValue, DocumentTree_Node *node) {
 	if (node->len == 0) {
-		String line = Integer_ToString(node->line);
+		String line = Integer_ToString(this->ofsLine + node->line);
 		Logger_Error(this->logger, $("line %: value expected."), line.rd);
 		String_Destroy(&line);
 
@@ -120,7 +127,7 @@ static def(RdString, GetValue, DocumentTree_Node *node) {
 	}
 
 	if (node->len > 1) {
-		String line = Integer_ToString(node->line);
+		String line = Integer_ToString(this->ofsLine + node->line);
 		Logger_Error(this->logger, $("line %: too many nodes."), line.rd);
 		String_Destroy(&line);
 
@@ -130,7 +137,7 @@ static def(RdString, GetValue, DocumentTree_Node *node) {
 	DocumentTree_Node *child = node->buf[0];
 
 	if (child->type != DocumentTree_NodeType_Value) {
-		String line = Integer_ToString(child->line);
+		String line = Integer_ToString(this->ofsLine + child->line);
 		Logger_Error(this->logger,
 			$("line %: node given, text expected."),
 			line.rd);
@@ -174,7 +181,7 @@ static def(void, ParseList, Body *body, DocumentTree_Node *node) {
 
 		if (child->type == DocumentTree_NodeType_Tag) {
 			if (!String_Equals(child->value.rd, $("item"))) {
-				String line = Integer_ToString(child->line);
+				String line = Integer_ToString(this->ofsLine + child->line);
 				Logger_Error(this->logger,
 					$("line %: got '%', 'item' expected."),
 					line.rd, child->value.rd);
@@ -443,7 +450,7 @@ static def(void, ParseItem, Body *body, DocumentTree_Node *child) {
 	} else if (String_Equals(name, $("caption"))) {
 		call(ParseCaption, body, child);
 	} else {
-		String line = Integer_ToString(child->line);
+		String line = Integer_ToString(this->ofsLine + child->line);
 		Logger_Error(this->logger,
 			$("line %: '%' not understood."),
 			line.rd, name);
@@ -601,7 +608,7 @@ def(void, ProcessNodes, DocumentTree_Node *node, ref(Handler) *handlers) {
 			ref(Handler) *handler = call(GetHandler, node.name, handlers);
 
 			if (handler == NULL) {
-				String line = Integer_ToString(child->line);
+				String line = Integer_ToString(this->ofsLine + child->line);
 				Logger_Error(this->logger,
 					$("line %: '%' not understood."),
 					line.rd, node.name);

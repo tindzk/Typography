@@ -29,6 +29,7 @@ class {
 	String        file;
 	YAML          yml;
 	Ecriture_Tree ecr;
+	size_t        ofsLine;
 	Logger        *logger;
 	BodyArray     *footnotes;
 	bool          autoDetectParagraphs;
