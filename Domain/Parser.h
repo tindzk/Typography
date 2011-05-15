@@ -4,8 +4,9 @@
 #import <String.h>
 #import <Logger.h>
 #import <Integer.h>
-#import <Ecriture.h>
 #import <StringStream.h>
+#import <Ecriture/Tree.h>
+#import <Ecriture/Parser.h>
 
 #import "Body.h"
 
@@ -14,7 +15,7 @@
 record(ref(Node)) {
 	RdString name;
 	RdString options;
-	Ecriture_Node *node;
+	DocumentTree_Node *node;
 };
 
 Callback(ref(OnNode), void, ref(Node) *node);
@@ -25,23 +26,24 @@ record(ref(Handler)) {
 };
 
 class {
-	Ecriture   ecr;
-	YAML       yml;
-	Logger     *logger;
-	BodyArray  *footnotes;
-	bool       autoDetectParagraphs;
+	String        file;
+	YAML          yml;
+	Ecriture_Tree ecr;
+	Logger        *logger;
+	BodyArray     *footnotes;
+	bool          autoDetectParagraphs;
 };
 
 rsdef(self, New);
 def(void, Destroy);
 def(void, SetAutoDetectParagraphs, bool value);
 def(BodyArray *, GetFootnotes);
-def(Ecriture_Node *, GetRoot);
+def(DocumentTree_Node *, GetRoot);
 def(void, Parse, RdString path);
 def(RdString, GetMeta, RdString name);
 def(RdStringArray *, GetMultiMeta, RdString name);
-def(void, ProcessNodes, Ecriture_Node *node, ref(Handler) *handlers);
-def(Body, ProcessBody, Ecriture_Node *node, ref(Handler) *handlers);
+def(void, ProcessNodes, DocumentTree_Node *node, ref(Handler) *handlers);
+def(Body, ProcessBody, DocumentTree_Node *node, ref(Handler) *handlers);
 def(ref(Node), GetNodeByName, RdString name);
 
 #undef self

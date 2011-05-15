@@ -18,21 +18,17 @@ author: Tim Nieradzik
 			.item{.url[../Jivai]{Jivai}}
 			.item{.url[../Depend]{Depend}}
 			.item{.url[../tplgen]{tplgen}}
-		}
-	}
+	}}
 
 	.section[Checkout] {
 		.command {
 			$ git clone git://github.com/tindzk/Typography.git
-		}
-	}
+	}}
 
 	.section[Compile] {
 		.command {
 			$ cd Typography ; ./Build.sh
-		}
-	}
-}
+}}}
 
 .chapter[Document Structure] {
 	Like in mails and HTTP requests, a document consists of two parts: a header and a body. This allows better separation between meta information like title, author etc. and actual contents.
@@ -43,13 +39,13 @@ author: Tim Nieradzik
 
 	An imaginary example for illustrating the structure is:
 
-	.code {{
+	.code {`
 		meta1: value
 		meta2: value
 		meta3: value
 
 		This is a .command{command's value}.
-	}}
+	`}
 
 	Header and body must be separated by an empty line. Headers cannot be set or overwritten in the body.
 }
@@ -71,7 +67,7 @@ author: Tim Nieradzik
 .chapter[Your First Document] {
 	To get familiar with Typography, here's a simple document:
 
-	.code {{
+	.code {`
 		title: Document Title
 		author: Author
 		toc: Table of Contents
@@ -89,7 +85,7 @@ author: Tim Nieradzik
 				Second paragraph.
 			}
 		}
-	}}
+	`}
 
 	.keyword{toc} sets the name for the table of contents. The value is not hard-coded as Typography aims to be language agnostic. If you don't set .keyword{toc}, the table of contents is left away.
 
@@ -99,12 +95,12 @@ author: Tim Nieradzik
 .chapter[Commands] {
 	A document written in Typography is basically a sequence of (nested) commands surrounded by text. Commands are comparable to functions in programming languages. Hence, some commands may even accept options.
 
-	A typical command is used like this: .keyword{.cmd\{value\}}. Parameters are generally optional. They can be specified using square brackets: .keyword{.cmd\[param\]\{value\}}.
+	A typical command is used like this: .keyword{`.cmd{value}`}. Parameters are generally optional. They can be specified using square brackets: .keyword{`.cmd[param]{value}`}.
 
 	.section[Chapters and Sections] {
 		.keyword{chapter} is a top-level command, i.e. it cannot be used within other blocks.
 
-		Chapters are automatically added to the table of contents. Sometimes it's desired to subdivide the contents of a chapter. Therefore, chapters may also contain sections (.keyword{.section\{...\}}). However, the generated table of contents won't cover any links to sections.
+		Chapters are automatically added to the table of contents. Sometimes it's desired to subdivide the contents of a chapter. Therefore, chapters may also contain sections (.keyword{`.section{...}`}). However, the generated table of contents won't cover any links to sections.
 	}
 
 	.section[Style] {
@@ -135,18 +131,17 @@ author: Tim Nieradzik
 
 		.warning {
 			Warning block
-		}
-	}
+	}}
 
 	.section[Lists] {
 		A list is initialized using the .keyword{list} command. Within a list, there cannot be other elements than .keyword{item}s:
 
-		.code {{
+		.code {`
 			.list {
 				.item{Item 1}
 				.item{Item 2}
 			}
-		}}
+		`}
 	}
 
 	.section[Paragraphs] {
@@ -167,17 +162,17 @@ author: Tim Nieradzik
 
 		For example, this
 
-		.code {{
+		.code {`
 			.command {
 				$ ls -lah
 			}
 
-			.code {{
+			.code {``
 				int main(void) {
 					return EXIT_SUCCESS;
 				}
-			\}}
-		}}
+			``}
+		`}
 
 		will render to:
 
@@ -185,11 +180,11 @@ author: Tim Nieradzik
 			$ ls -lah
 		}
 
-		.code {{
+		.code {`
 			int main(void) {
 				return EXIT_SUCCESS;
 			}
-		}}
+		`}
 	}
 
 	.section[Anchors] {
@@ -211,10 +206,10 @@ author: Tim Nieradzik
 
 		The usage of a link is similar to an .jump[jump]{anchor jumpers'}:
 
-		.code {{
+		.code {`
 			.url[http://www.google.com/]{Google}
 			.url[john@example.com]{John Smith}
-		}}
+		`}
 	}
 }
 
@@ -229,6 +224,4 @@ author: Tim Nieradzik
 			.item{.url[http://github.com/tindzk/Typography/issues]{Bug tracker}}
 			.item{.url[http://tindzk.github.com/]{Other projects}}
 			.item{.mail[tim.nieradzik@gmx.de]{Contact}}
-		}
-	}
-}
+}}}
