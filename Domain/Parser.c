@@ -459,12 +459,17 @@ static def(void, ParseItem, Body *body, DocumentTree_Node *child) {
 }
 
 static def(String, CleanText, RdString value) {
-	String text = String_ReplaceAll(value, $("\n"), $(" "));
+	CarrierString text  = String_ReplaceAll(value,    $("\n"), $(" "));
+	CarrierString text2 = String_ReplaceAll(text.rd,  $("\t"), $(" "));
+	CarrierString text3 = String_ReplaceAll(text2.rd, $("  "), $(" "));
 
-	while(String_ReplaceAll(&text, $("\t"), $(" ")));
-	while(String_ReplaceAll(&text, $("  "), $(" ")));
+	String res = String_Clone(text3.rd);
 
-	return text;
+	CarrierString_Destroy(&text3);
+	CarrierString_Destroy(&text2);
+	CarrierString_Destroy(&text);
+
+	return res;
 }
 
 static def(void, SetText, Body *body, String text) {
